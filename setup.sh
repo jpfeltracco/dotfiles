@@ -9,3 +9,4 @@ ln -s ${BASEDIR}/vimrc ~/.vimrc
 # bash
 ln -s ${BASEDIR}/bashrc ~/.bashrc
 
+ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
