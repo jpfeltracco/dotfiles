@@ -2,7 +2,7 @@
 "------------------------------------------------------------
 set nocompatible              " be iMproved, required
 filetype off                  " required
-
+let mapleader=","
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -14,6 +14,8 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'altercation/vim-colors-solarized' 
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/syntastic.git'
+Plugin 'taketwo/vim-ros'
+Plugin 'scrooloose/nerdcommenter'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -35,16 +37,22 @@ if executable('ag')
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 endif
 
+
 " Better syntastic settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height=3
+let g:syntastic_c_include_dirs = ['/opt/gtri-uav/auto/gtri-uav-dependencies/include/boost/math/special_functions/']
+
+" http://stackoverflow.com/questions/20030603/vim-syntastic-how-to-disable-the-checker
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
+nnoremap <C-w>E :SyntasticToggleMode<CR>
 
 " Must have options {{{1
 "------------------------------------------------------------
@@ -79,7 +87,8 @@ set t_Co=16
 set background=dark
 colorscheme solarized
 
-
+" http://vim.wikia.com/wiki/Displaying_status_line_always
+set laststatus=2
 " Usability options {{{1
 "
 " These are options that users frequently set in their .vimrc. Some of them
