@@ -20,6 +20,8 @@ alias ssh:dvm="ssh vagrant@desktop -p 8192"
 
 alias mbed="sudo picocom -b 57600 /dev/mbed0"
 
+alias junit="java org.junit.runner.JUnitCore"
+
 export PATH=$PATH:~/bin
 export CLASSPATH=$PATH:~/bin/hamcrest-core-1.3.jar:~/bin/junit-4.12.jar:.
 export EDITOR="vim"
