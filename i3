@@ -8,6 +8,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id wallpaper_reset
 exec --no-startup-id libinput-gestures
 exec --no-startup-id dropbox
+exec --no-startup-id emacs --daemon
 
 for_window [class="^.*"] border pixel 3
 hide_edge_borders both
@@ -45,7 +46,7 @@ bindsym $mod+Shift+q kill
 
 # start rofi (a program launcher)
 bindsym $mod+space exec --no-startup-id rofi -show drun
-bindsym Mod1+space exec --no-startup-id rofi -show window
+# bindsym Mod1+f2 exec --no-startup-id rofi -show window
 
 # change focus
 bindsym $mod+h focus left
@@ -164,7 +165,7 @@ bar {
         background #002b36
         statusline #839496
         inactive_workspace #002b36 #073642 #fdf6e3
-        active_workspace #fdf6e3 #dc322f #fdf6e3
+        active_workspace #002b36 #586e75 #002b36
         focused_workspace #002b36 #586e75 #002b36
         urgent_workspace #d33682 #dc322f #fdf6e3
     }
