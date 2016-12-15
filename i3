@@ -39,14 +39,14 @@ font pango:Source Code Pro 13
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec gnome-terminal
+bindsym $mod+Return exec termite
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
 # start rofi (a program launcher)
 bindsym $mod+space exec --no-startup-id rofi -show drun
-# bindsym Mod1+f2 exec --no-startup-id rofi -show window
+bindsym Mod1+space exec --no-startup-id rofi -show window
 
 # change focus
 bindsym $mod+h focus left
@@ -128,6 +128,12 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
+
+for_window [title="Mandelbrot"] floating enable
+for_window [title="Mandelbrot"] floating_minimum_size 512 x 512
+
+for_window [title="EVOLSHIP"] floating enable
+for_window [title="EVOLSHIP"] floating_minimum_size 512 x 512
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
