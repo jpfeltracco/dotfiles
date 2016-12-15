@@ -9,12 +9,10 @@ home_dir = os.getenv("HOME")
 # first element is in repo
 # second element is under HOME
 dotfiles = [
-    ("vimrc", ".vimrc"),
-    ("bashrc", ".bashrc"),
-    ("tmux.conf", ".tmux.conf"),
     ("i3", ".config/i3/config"),
     ("zshrc", ".zshrc"),
-    ("i3blocks.conf", ".i3blocks.conf")
+    ("i3blocks.conf", ".i3blocks.conf"),
+    ("init.vim", ".config/nvim/init.vim")
 ]
 
 def yes_no(prompt):
@@ -49,10 +47,11 @@ for src, dst in dotfiles:
 print_section("VUNDLE SETUP")
 if yes_no("Do vundle install?"):
     subprocess.call([
-        "git",
-        "clone",
-        "https://github.com/VundleVim/Vundle.vim.git",
-        home_dir + "/.vim/bundle/Vundle.vim"
+        "curl",
+        "-fLo",
+        "~/.local/share/nvim/site/autoload/plug.vim",
+        "--create-dirs",
+        "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     ])
 
     subprocess.call(["vim", "+PluginInstall", "+qall"])
