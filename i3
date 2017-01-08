@@ -4,14 +4,17 @@
 
 exec --no-startup-id compton -b
 exec --no-startup-id unclutter
-exec --no-startup-id nm-applet
+# exec --no-startup-id nm-applet
 exec --no-startup-id wallpaper_reset
-exec --no-startup-id libinput-gestures
-exec --no-startup-id dropbox
-exec --no-startup-id emacs --daemon
+exec --no-startup-id setxkbmap -option ctrl:nocaps
+exec --no-startup-id timedatectl set-ntp true
+# exec --no-startup-id libinput-gestures
+# exec --no-startup-id dropbox
 
 for_window [class="^.*"] border pixel 3
 hide_edge_borders both
+
+set $mod Mod4
 
 # Keys
 # Pulse Audio controls
@@ -31,12 +34,19 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-set $mod Mod4
 
-font pango:Source Code Pro 13
+font pango:Source Code Pro 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
+
+# Scratchpad Stuff
+
+# Make the currently focused window a scratchpad
+bindsym $mod+Shift+minus move scratchpad
+
+# Show the first scratchpad window
+bindsym $mod+minus scratchpad show
 
 # start a terminal
 bindsym $mod+Return exec termite
@@ -128,12 +138,6 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
-
-for_window [title="Mandelbrot"] floating enable
-for_window [title="Mandelbrot"] floating_minimum_size 512 x 512
-
-for_window [title="EVOLSHIP"] floating enable
-for_window [title="EVOLSHIP"] floating_minimum_size 512 x 512
 
 # resize window (you can also use the mouse for that)
 mode "resize" {

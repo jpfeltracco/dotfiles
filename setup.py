@@ -44,8 +44,8 @@ print_section("DOT FILE SETUP")
 for src, dst in dotfiles:
     make_link(script_dir + "/" + src, home_dir + "/" + dst)
 
-print_section("VUNDLE SETUP")
-if yes_no("Do vundle install?"):
+print_section("VIM PLUG SETUP")
+if yes_no("Do VimPlug setup?"):
     subprocess.call([
         "curl",
         "-fLo",
