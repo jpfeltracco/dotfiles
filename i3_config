@@ -9,6 +9,7 @@ exec --no-startup-id dropbox
 exec --no-startup-id compton -b
 exec --no-startup-id wallpaper_reset
 exec --no-startup-id unclutter
+exec --no-startup-id libinput-gestures
 
 for_window [class="^.*"] border pixel 3
 hide_edge_borders both
@@ -29,11 +30,11 @@ set $menu dmenu_run -b
 
 # Keys
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 1 +2% && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +2% && pkill -RTMIN+10 i3blocks
 # Increase volume
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume 1 -2% && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -2% && pkill -RTMIN+10 i3blocks
 # Decrease volume
-bindsym XF86AudioMute exec pactl set-sink-mute 1 toggle && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle && pkill -RTMIN+10 i3blocks
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec light -A 3 # increase screen brightness
@@ -187,7 +188,8 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+    status_command i3status
+    position top
 }
 
 client.focused #859900 #859900 #fdf6e3 #6c71c4
