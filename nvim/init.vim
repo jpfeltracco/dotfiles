@@ -1,11 +1,27 @@
 " user settings
 filetype plugin indent on
-" show existing tab with 4 spaces width
-set tabstop=4
+" show existing tab with 4 spaces width set tabstop=4
 " when indenting with '>', use 4 spaces width
 set shiftwidth=4
 " On pressing tab, insert 4 spaces
 set expandtab
+
+" Navigate tabs with C-1,2,3,4...
+nnoremap <leader>1 1gt
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>6 6gt
+nnoremap <leader>7 7gt
+nnoremap <leader>8 8gt
+nnoremap <leader>9 9gt
+nnoremap <leader>0 10gt
+
+" New tab
+nnoremap <leader>n :tabnew<CR>
+
+let g:netrw_liststyle=3
 
 let mapleader="\<SPACE>"
 " Specify a directory for plugins
@@ -19,6 +35,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
+Plug 'Rykka/riv.vim'
+Plug 'vimwiki/vimwiki'
 " Plug 'scrooloose/syntastic'
 
 " Initialize plugin system
