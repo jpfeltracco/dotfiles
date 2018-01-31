@@ -34,7 +34,7 @@ Plug 'tpope/vim-fugitive'
 " Note, this installs fzf to system
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 Plug 'Rykka/riv.vim'
 Plug 'vimwiki/vimwiki'
 " Plug 'scrooloose/syntastic'
