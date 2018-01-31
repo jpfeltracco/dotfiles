@@ -44,7 +44,7 @@ call plug#end()
 
 " solarized
 syntax enable
-set background=light
+set background=dark
 colorscheme solarized
 
 " nerd commenter
