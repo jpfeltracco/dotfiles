@@ -2,7 +2,7 @@
 
 import os
 from sys import platform
-from subprocess import check_call as run
+from subprocess import check_call
 
 #################################
 ##### Helper Functions
@@ -13,19 +13,26 @@ def print_cmd(cmd):
         cmd = " ".join(cmd)
     print("RUN: `{}`".format(cmd))
 
+def print_section(sec):
+    print("SECTION: `{}`".format(sec))
+
+def print_info(info):
+    print("INFO: `{}`".format(info))
+
+def run(cmd):
+    print_cmd(cmd)
+    check_call(cmd)
+
 def apt_add_repo(repo):
     cmd = "sudo apt-add-repository -y {}".format(repo)
-    print_cmd(cmd)
     run(cmd.split())
 
 def apt_get_pkgs(pkg_str):
     cmd = "sudo apt-get install -y {}".format(pkg_str)
-    print_cmd(cmd)
     run(cmd.split())
 
 def brew_install_pkgs(pkg_str):
     cmd = "brew install {}".format(pkg_str)
-    print_cmd(cmd)
     run(cmd.split())
 
 def git_clone(url, flags=None, dest=None):
@@ -34,7 +41,6 @@ def git_clone(url, flags=None, dest=None):
         command_list.append(flags)
     if dest is not None:
         command_list.append(dest)
-    print_cmd(command_list)
     run(command_list)
 
 def vim_plug_setup():
@@ -44,10 +50,8 @@ def vim_plug_setup():
         "curl -fLo {} --create-dirs {}".format(plug_install_path, plug_url).split()
     )
     run(vim_plug_install_cmd)
-    print_cmd(vim_plug_install_cmd)
 
     nvim_install_plug_cmd = "nvim +PlugInstall +qall".split()
-    print_cmd(nvim_install_plug_cmd)
     run(nvim_install_plug_cmd)
 
 def gnome_term_solarized():
@@ -72,27 +76,36 @@ def yadm_clone():
     if not os.path.isdir(os.path.expanduser("~/.yadm")):
         dotfiles_repo = "https://github.com/jpfeltracco/dotfiles"
         cmd = ["yadm", "clone", dotfiles_repo]
-        print_cmd(cmd)
         run(cmd)
+    else:
+        print_info("Yadm already cloned")
 
 #################################
 ##### Setup Functions
 #################################
 def linux_setup():
     # Should only run if neovim isn't already installed
-    apt_add_repo("ppa:neovim-ppa/stable")
-    apt_get_pkgs("git neovim yadm")
-    vim_plug_setup()
+    print_section("Install yadm")
     yadm_clone()
+    print_section("Add Neovim PPA")
+    apt_add_repo("ppa:neovim-ppa/stable")
+    print_section("Install apt-get packages")
+    apt_get_pkgs("git neovim yadm")
+    print_section("Install Vim Plug")
+    vim_plug_setup()
 
 def macos_setup():
+    print_section("Install brew packages")
     brew_install_pkgs("git neovim yadm")
+    print_section("Install Vim Plug")
+    vim_plug_setup()
 
 #################################
 ##### Main
 #################################
-if platform == "linux" or platform == "linux2":
-    # Assume all linux is debian, I know, it's bad
-    linux_setup()
-elif platform == "darwin":
-    macos_setup()
+if __name__ == "__main__":
+    if platform == "linux" or platform == "linux2":
+        # Assume all linux is debian, I know, it's bad
+        linux_setup()
+    elif platform == "darwin":
+        macos_setup()
