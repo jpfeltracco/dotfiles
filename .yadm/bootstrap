@@ -75,28 +75,54 @@ def add_to_shell_config(line):
 def yadm_clone():
     if not os.path.isdir(os.path.expanduser("~/.yadm")):
         dotfiles_repo = "https://github.com/jpfeltracco/dotfiles"
-        cmd = ["yadm", "clone", dotfiles_repo]
+        cmd = ["yadm", "clone", "--no-bootstrap", dotfiles_repo]
         run(cmd)
     else:
         print_info("Yadm already cloned")
+
+def setup_zsh():
+    zprezto_repo = os.path.expanduser("~/.zprezto")
+    if not os.path.isdir(zprezto_repo):
+       git_clone(
+           url="https://github.com/sorin-ionescu/prezto.git",
+           dest=os.path.expanduser("~/.zprezto")
+       )
+
+    zsh_zprezto_cmd = ("zsh -c \"setopt EXTENDED_GLOB\n"
+      + "for rcfile in \"${ZDOTDIR:-$HOME}\"/.zprezto/runcoms/^README.md(.N); do\n"
+      + "    ln -s \"$rcfile\" \"${ZDOTDIR:-$HOME}/.${rcfile:t}\"\n"
+      + "done\"")
+
+    run(zsh_zprezto_cmd)
+
 
 #################################
 ##### Setup Functions
 #################################
 def linux_setup():
     # Should only run if neovim isn't already installed
-    print_section("Install yadm")
-    yadm_clone()
     print_section("Add Neovim PPA")
     apt_add_repo("ppa:neovim-ppa/stable")
+
     print_section("Install apt-get packages")
-    apt_get_pkgs("git neovim yadm")
+    apt_get_pkgs("git neovim zsh yadm zsh")
+
+    print_section("Install yadm (dotfiles)")
+    yadm_clone()
+
     print_section("Install Vim Plug")
     vim_plug_setup()
+
+    print_section("Setting gnome terminal solarized")
+    gnome_term_solarized()
+
+    print_section("Setting up zsh (with prezto)")
+    setup_zsh()
 
 def macos_setup():
     print_section("Install brew packages")
     brew_install_pkgs("git neovim yadm")
+
     print_section("Install Vim Plug")
     vim_plug_setup()
 
