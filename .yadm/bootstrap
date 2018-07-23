@@ -122,6 +122,11 @@ def setup_zsh():
            dest=zprezto_repo
        )
 
+    git_config_name = "git config user.name \"Jeremy Feltracco\""
+    git_config_email = "git config user.email \"jpfeltracco@gmail.com\""
+    run(git_config_name.split(), cwd=os.path.expanduser("~/.zprezto"))
+    run(git_config_email.split(), cwd=os.path.expanduser("~/.zprezto"))
+
     change_shell_cmd = "chsh -s /bin/zsh"
     run(change_shell_cmd.split())
        
