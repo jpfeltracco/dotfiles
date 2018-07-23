@@ -82,9 +82,11 @@ def yadm_clone():
 
 def setup_zsh():
     zprezto_repo = os.path.expanduser("~/.zprezto")
+
+    # Yadm should add this repo as a submodule now
     if not os.path.isdir(zprezto_repo):
        git_clone(
-           url="https://github.com/sorin-ionescu/prezto.git",
+           url="https://github.com/jpfeltracco/prezto",
            flags="--recursive",
            dest=os.path.expanduser("~/.zprezto")
        )
