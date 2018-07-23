@@ -23,6 +23,17 @@ def run(cmd):
     print_cmd(cmd)
     check_call(cmd)
 
+def pkg_check_installed(pkg):
+    cmd = "dpkg -l {}".format(pkg)
+    success = True
+    try:
+        run(cmd.split())
+    except CalledProcessError as e:
+        print("Package {} not found, error: {}".format(pkg, e))
+        success = False
+
+    return success
+
 def apt_get_update():
     cmd = "sudo apt-get update"
     run(cmd.split())
@@ -31,8 +42,8 @@ def apt_add_repo(repo):
     cmd = "sudo apt-add-repository -y {}".format(repo)
     run(cmd.split())
 
-def apt_get_pkgs(pkg_str):
-    cmd = "sudo apt-get install -y {}".format(pkg_str)
+def apt_get_pkgs(pkg_list):
+    cmd = "sudo apt-get install -y {}".format(" ".join(pkg_list))
     run(cmd.split())
 
 def brew_install_pkgs(pkg_str):
@@ -105,14 +116,20 @@ def setup_zsh():
 #################################
 ##### Setup Functions
 #################################
-def linux_setup():
+def linux_setup(): 
     # Should only run if neovim isn't already installed
-    print_section("Add Neovim PPA")
-    apt_add_repo("ppa:neovim-ppa/stable")
-    apt_get_update()
+    neovim_installed = pkg_check_installed("neovim")
+
+    pkg_list = ["git", "yadm", "zsh", "curl"]
+
+    if not neovim_installed:
+        print_section("Add Neovim PPA")
+        apt_add_repo("ppa:neovim-ppa/stable")
+        apt_get_update()
+        pkg_list.append("neovim")
 
     print_section("Install apt-get packages")
-    apt_get_pkgs("git neovim zsh yadm zsh")
+    apt_get_pkgs(pkg_list)
 
     print_section("Install yadm (dotfiles)")
     yadm_clone()
@@ -123,8 +140,10 @@ def linux_setup():
     print_section("Setting gnome terminal solarized")
     gnome_term_solarized()
 
-    print_section("Setting up zsh (with prezto)")
-    setup_zsh()
+    shell = os.environ['SHELL']
+    if shell != "/bin/zsh":
+        print_section("Setting up zsh (with prezto)")
+        setup_zsh()
 
 def macos_setup():
     print_section("Install brew packages")
