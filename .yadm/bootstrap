@@ -109,8 +109,10 @@ def setup_zsh():
        symlink_setup = "zsh {}/symlink.zsh".format(zprezto_repo)
        run(symlink_setup.split())
 
-    change_shell_cmd = "chsh -s /bin/zsh"
-    run(change_shell_cmd.split())
+    shell = os.environ['SHELL']
+    if shell != "/bin/zsh":
+        change_shell_cmd = "chsh -s /bin/zsh"
+        run(change_shell_cmd.split())
 
 
 #################################
@@ -140,10 +142,7 @@ def linux_setup():
     print_section("Setting gnome terminal solarized")
     gnome_term_solarized()
 
-    shell = os.environ['SHELL']
-    if shell != "/bin/zsh":
-        print_section("Setting up zsh (with prezto)")
-        setup_zsh()
+    setup_zsh()
 
 def macos_setup():
     print_section("Install brew packages")
