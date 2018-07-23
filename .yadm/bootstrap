@@ -142,11 +142,15 @@ def linux_setup():
 
     pkg_list = ["git", "yadm", "zsh", "curl"]
 
+
     if not neovim_installed:
         print_section("Add Neovim PPA")
         apt_add_repo("ppa:neovim-ppa/stable")
         apt_get_update()
         pkg_list.append("neovim")
+
+    pip3_install_nvr = "pip3 install neovim-remote"
+    run(pip3_install_nvr.split())
 
     print_section("Install apt-get packages")
     apt_get_pkgs(pkg_list)

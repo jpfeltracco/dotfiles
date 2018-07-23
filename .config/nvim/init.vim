@@ -92,7 +92,10 @@ set splitright
 set clipboard=unnamed
 
 " Terminal settings
-tnoremap <ESC> <C-\><C-n>
+" Breaks fzf term windows, also allows you to get trapped in child neovim
+" sessions if not careful
+" tnoremap <ESC> <C-\><C-n>
+tnoremap <C-\><C-\> <C-\><C-n>
 
 if executable('ag')
   " Use Ag over Grep
