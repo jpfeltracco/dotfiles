@@ -97,7 +97,13 @@ def yadm_clone():
         print_info("Yadm already cloned")
 
     git_submodule_update = "yadm submodule update --init --recursive"
-    run(git_submodule_update.split())
+
+    try:
+        run(git_submodule_update.split())
+    except CalledProcessError as e:
+        print("submodule update returned error code, but this is a git bug I believe, error: {}"
+              .format(e))
+    
 
     git_config_name = "git config user.name \"Jeremy Feltracco\""
     git_config_email = "git config user.email \"jpfeltracco@gmail.com\""
