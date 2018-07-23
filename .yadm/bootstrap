@@ -140,7 +140,7 @@ def linux_setup():
     # Should only run if neovim isn't already installed
     neovim_installed = pkg_check_installed("neovim")
 
-    pkg_list = ["git", "yadm", "zsh", "curl"]
+    pkg_list = ["git", "yadm", "zsh", "curl", "exuberant-ctags"]
 
 
     if not neovim_installed:
