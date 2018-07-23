@@ -85,15 +85,12 @@ def setup_zsh():
     if not os.path.isdir(zprezto_repo):
        git_clone(
            url="https://github.com/sorin-ionescu/prezto.git",
+           flags="--recursive",
            dest=os.path.expanduser("~/.zprezto")
        )
 
-    zsh_zprezto_cmd = ("zsh -c \"setopt EXTENDED_GLOB\n"
-      + "for rcfile in \"${ZDOTDIR:-$HOME}\"/.zprezto/runcoms/^README.md(.N); do\n"
-      + "    ln -s \"$rcfile\" \"${ZDOTDIR:-$HOME}/.${rcfile:t}\"\n"
-      + "done\"")
-
-    run(zsh_zprezto_cmd)
+    change_shell_cmd = "chsh -s /bin/zsh"
+    run(change_shell_cmd.split())
 
 
 #################################
