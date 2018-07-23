@@ -121,15 +121,14 @@ def setup_zsh():
            flags="--recursive",
            dest=zprezto_repo
        )
-       
-    symlink_setup = "zsh {}/symlink.zsh".format(zprezto_repo)
-    run(symlink_setup.split())
 
     shell = os.environ['SHELL']
     if shell != "/bin/zsh":
         change_shell_cmd = "chsh -s /bin/zsh"
         run(change_shell_cmd.split())
-
+       
+    symlink_setup = "zsh {}/symlink.zsh".format(zprezto_repo)
+    run(symlink_setup.split())
 
 #################################
 ##### Setup Functions
