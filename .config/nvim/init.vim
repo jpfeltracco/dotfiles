@@ -42,9 +42,9 @@ Plug 'iCyMind/NeoSolarized'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-fugitive'
 " Note, this installs fzf to system
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-" Plug 'junegunn/fzf.vim'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+" Plug 'ctrlpvim/ctrlp.vim'
 " Plug 'mileszs/ack.vim'
 " Plug 'w0rp/ale'
 Plug 'Rykka/riv.vim'
@@ -68,14 +68,19 @@ colorscheme NeoSolarized
 let NERDSpaceDelims=1
 
 " fzf
-" command! -bang -nargs=* GGrep
-  " \ call fzf#vim#grep(
-  " \   'git grep --line-number '.shellescape(<q-args>), 0,
-  " \   fzf#vim#with_preview({'options': '--delimiter : --nth 3..'}, 'up:60%'))
 
-nnoremap <Leader>a :GGrep<CR>
-nnoremap <Leader>p :CtrlP<CR>
-nnoremap <Leader>o :Files<CR>
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number '.shellescape(<q-args>), 0,
+  \   <bang>0 ? fzf#vim#with_preview({'options': '--no-hscroll'},'up:60%')
+  \           : fzf#vim#with_preview({'options': '--no-hscroll'},'right:50%'),
+  \   <bang>0)
+
+nnoremap <Leader>/ :GGrep<CR>
+nnoremap <Leader>p :GFiles<CR>
+nnoremap <Leader>a/ :Ag<CR>
+nnoremap <Leader>ap :Files<CR>
+
 nnoremap <Leader>b :Buffers<CR>
 nnoremap <Leader>h :History<CR>
 nnoremap <Leader>l :Lines<CR>
