@@ -122,8 +122,8 @@ def setup_zsh():
            dest=zprezto_repo
        )
        
-       symlink_setup = "zsh {}/symlink.zsh".format(zprezto_repo)
-       run(symlink_setup.split())
+    symlink_setup = "zsh {}/symlink.zsh".format(zprezto_repo)
+    run(symlink_setup.split())
 
     shell = os.environ['SHELL']
     if shell != "/bin/zsh":
