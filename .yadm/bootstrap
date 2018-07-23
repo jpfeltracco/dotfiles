@@ -91,10 +91,13 @@ def add_to_shell_config(line):
 def yadm_clone():
     if not os.path.isdir(os.path.expanduser("~/.yadm")):
         dotfiles_repo = "https://github.com/jpfeltracco/dotfiles"
-        cmd = ["yadm", "clone", dotfiles_repo, "--recursive"]
+        cmd = ["yadm", "clone", dotfiles_repo]
         run(cmd)
     else:
         print_info("Yadm already cloned")
+
+    git_submodule_update = "yadm submodule update --init --recursive"
+    run(git_submodule_update.split())
 
     git_config_name = "git config user.name \"Jeremy Feltracco\""
     git_config_email = "git config user.email \"jpfeltracco@gmail.com\""
