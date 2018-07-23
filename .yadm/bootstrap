@@ -20,9 +20,9 @@ def print_section(sec):
 def print_info(info):
     print("INFO: `{}`".format(info))
 
-def run(cmd):
+def run(cmd, *args, **kwargs):
     print_cmd(cmd)
-    check_call(cmd)
+    check_call(cmd, *args, **kwargs)
 
 def pkg_check_installed(pkg):
     cmd = "dpkg -l {}".format(pkg)
@@ -95,6 +95,12 @@ def yadm_clone():
         run(cmd)
     else:
         print_info("Yadm already cloned")
+
+    git_config_name = "git config user.name \"Jeremy Feltracco\""
+    git_config_email = "git config user.email \"jpfeltracco@gmail.com\""
+
+    run(git_config_name.split(), cwd=os.path.expanduser("~/.yadm/repo.git"))
+    run(git_config_email.split(), cwd=os.path.expanduser("~/.yadm/repo.git"))
 
 def setup_zsh():
     zprezto_repo = os.path.expanduser("~/.zprezto")
