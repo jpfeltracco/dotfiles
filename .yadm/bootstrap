@@ -23,6 +23,10 @@ def run(cmd):
     print_cmd(cmd)
     check_call(cmd)
 
+def apt_get_update():
+    cmd = "sudo apt-get update"
+    run(cmd.split())
+
 def apt_add_repo(repo):
     cmd = "sudo apt-add-repository -y {}".format(repo)
     run(cmd.split())
@@ -75,7 +79,7 @@ def add_to_shell_config(line):
 def yadm_clone():
     if not os.path.isdir(os.path.expanduser("~/.yadm")):
         dotfiles_repo = "https://github.com/jpfeltracco/dotfiles"
-        cmd = ["yadm", "clone", "--no-bootstrap", dotfiles_repo]
+        cmd = ["yadm", "clone", dotfiles_repo]
         run(cmd)
     else:
         print_info("Yadm already cloned")
@@ -88,8 +92,11 @@ def setup_zsh():
        git_clone(
            url="https://github.com/jpfeltracco/prezto",
            flags="--recursive",
-           dest=os.path.expanduser("~/.zprezto")
+           dest=zprezto_repo
        )
+       
+       symlink_setup = "zsh {}/symlink.zsh".format(zprezto_repo)
+       run(symlink_setup.split())
 
     change_shell_cmd = "chsh -s /bin/zsh"
     run(change_shell_cmd.split())
@@ -102,6 +109,7 @@ def linux_setup():
     # Should only run if neovim isn't already installed
     print_section("Add Neovim PPA")
     apt_add_repo("ppa:neovim-ppa/stable")
+    apt_get_update()
 
     print_section("Install apt-get packages")
     apt_get_pkgs("git neovim zsh yadm zsh")

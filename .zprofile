@@ -1,1 +1,0 @@
-/home/jpfeltracco/.zprezto/runcoms/zprofile
