@@ -52,6 +52,8 @@ Plug 'Rykka/riv.vim'
 Plug 'vimwiki/vimwiki'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'ludovicchabant/vim-gutentags'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 " Plug 'scrooloose/syntastic'
 
 " Initialize plugin system
@@ -68,8 +70,23 @@ colorscheme NeoSolarized
 " nerd commenter
 let NERDSpaceDelims=1
 
-" fzf
+" j - cd to recent / frequent directories
+command! -nargs=* Jump :call Jump(<f-args>)
+function! Jump(...)
+  let cmd = 'fasd -d -e printf'
+  for arg in a:000
+    let cmd = cmd . ' ' . arg
+  endfor
+  let path = system(cmd)
+  if isdirectory(path)
+    echo path
+    exec 'cd' fnameescape(path)
+  endif
+endfunction
 
+nnoremap <Leader>j :Jump<space>
+
+" fzf
 command! -bang -nargs=* GGrep
   \ call fzf#vim#grep(
   \   'git grep --line-number '.shellescape(<q-args>), 0,
@@ -82,10 +99,30 @@ nnoremap <Leader>p :GFiles<CR>
 nnoremap <Leader>a/ :Ag<CR>
 nnoremap <Leader>ap :Files<CR>
 
-nnoremap <Leader>b :Buffers<CR>
+" nnoremap <Leader>b :Buffers<CR>
 nnoremap <Leader>h :History<CR>
 nnoremap <Leader>l :Lines<CR>
 
+" Vim fugitive
+nnoremap <Leader>gd :Git! diff<CR>
+nnoremap <Leader>gr :Gread<CR>
+nnoremap <Leader>gw :Gwrite<CR>
+nnoremap <Leader>gm :Gmove<CR>
+nnoremap <Leader>gc :Gcommit<CR>
+nnoremap <Leader>gb :Gblame<CR>
+
+" Buffers easier
+nnoremap <Leader>bb :Buffers<CR>
+nnoremap <Leader>b :Buffers<CR>
+nnoremap <Leader>bd :bd<CR>
+nnoremap <Leader>bw :bw<CR>
+nnoremap <Leader>bn :new<CR>
+nnoremap <Leader>bu :bu<CR>
+
+" Build!
+nnoremap <Leader>m :make -C build<CR>
+
+" Natural splits
 set splitbelow
 set splitright
 

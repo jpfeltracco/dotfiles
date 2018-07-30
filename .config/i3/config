@@ -64,6 +64,9 @@ bindsym Mod1+Return exec gnome-terminal
 # kill focused window
 bindsym Mod1+Shift+q kill
 
+# lock screen
+bindsym Mod1+q exec lock
+
 # start dmenu (a program launcher)
 # changed from Mod1+d to allow alt-d to work in webbrowsers
 bindsym Mod1+space exec dmenu_run
