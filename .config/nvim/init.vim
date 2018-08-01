@@ -34,6 +34,8 @@ set termguicolors
 
 let g:netrw_liststyle=3
 
+set number
+
 " Specify a directory for plugins
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.local/share/nvim/plugged')
@@ -45,6 +47,7 @@ Plug 'airblade/vim-rooter'
 " Note, this installs fzf to system
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'majutsushi/tagbar'
 " Plug 'ctrlpvim/ctrlp.vim'
 " Plug 'mileszs/ack.vim'
 " Plug 'w0rp/ale'
@@ -121,6 +124,9 @@ nnoremap <Leader>bu :bu<CR>
 
 " Build!
 nnoremap <Leader>m :make -C build<CR>
+
+" Tags!
+nnoremap <Leader>t :TagbarToggle<CR>
 
 " Natural splits
 set splitbelow
