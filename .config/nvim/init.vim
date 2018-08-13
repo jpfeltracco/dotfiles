@@ -141,6 +141,13 @@ set clipboard=unnamed
 " tnoremap <ESC> <C-\><C-n>
 tnoremap <C-\><C-\> <C-\><C-n>
 
+tnoremap <C-w>h <C-\><C-n><C-w><C-h>
+tnoremap <C-w>j <C-\><C-n><C-w><C-j>
+tnoremap <C-w>k <C-\><C-n><C-w><C-k>
+tnoremap <C-w>l <C-\><C-n><C-w><C-l>
+
+autocmd BufWinEnter,WinEnter term://* startinsert
+
 if executable('ag')
   " Use Ag over Grep
   set grepprg=ag\ --nogroup\ --nocolor
