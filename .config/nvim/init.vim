@@ -44,6 +44,7 @@ Plug 'iCyMind/NeoSolarized'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-rooter'
+Plug 'sakhnik/nvim-gdb'
 " Note, this installs fzf to system
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -54,13 +55,19 @@ Plug 'majutsushi/tagbar'
 Plug 'Rykka/riv.vim'
 Plug 'vimwiki/vimwiki'
 Plug 'ekalinin/Dockerfile.vim'
-Plug 'ludovicchabant/vim-gutentags'
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
+"Plug 'ludovicchabant/vim-gutentags'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 " Plug 'scrooloose/syntastic'
 
 " Initialize plugin system
 call plug#end()
+
+" Ale
+let g:ale_linters = {'cpp': ['cppcheck'], 'py': []}
 
 " gutentags
 let g:gutentags_ctags_extra_args = ['--exclude=build*']
