@@ -43,7 +43,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'iCyMind/NeoSolarized'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-rooter'
+" Plug 'airblade/vim-rooter'
 Plug 'sakhnik/nvim-gdb'
 " Note, this installs fzf to system
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -55,12 +55,12 @@ Plug 'majutsushi/tagbar'
 Plug 'Rykka/riv.vim'
 Plug 'vimwiki/vimwiki'
 Plug 'ekalinin/Dockerfile.vim'
-"Plug 'ludovicchabant/vim-gutentags'
+Plug 'ludovicchabant/vim-gutentags'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 " Plug 'scrooloose/syntastic'
 
 " Initialize plugin system
@@ -99,13 +99,15 @@ nnoremap <Leader>j :Jump<space>
 " fzf
 command! -bang -nargs=* GGrep
   \ call fzf#vim#grep(
-  \   'git grep --line-number '.shellescape(<q-args>), 0,
+  \   'git grep --recurse-submodules --line-number '.shellescape(<q-args>), 0,
   \   <bang>0 ? fzf#vim#with_preview({'options': '--no-hscroll'},'up:60%')
   \           : fzf#vim#with_preview({'options': '--no-hscroll'},'right:50%'),
   \   <bang>0)
 
-nnoremap <Leader>/ :GGrep<CR>
-nnoremap <Leader>p :GFiles<CR>
+" nnoremap <Leader>/ :GGrep<CR>
+nnoremap <Leader>/ :Ag<CR>
+" nnoremap <Leader>p :GFiles<CR>
+nnoremap <Leader>p :Files<CR>
 nnoremap <Leader>a/ :Ag<CR>
 nnoremap <Leader>ap :Files<CR>
 
