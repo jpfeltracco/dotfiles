@@ -59,9 +59,11 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'morhetz/gruvbox'
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
 " Plug 'scrooloose/syntastic'
+" Plug 'christoomey/vim-tmux-navigator'
 
 " Initialize plugin system
 call plug#end()
@@ -75,7 +77,7 @@ let g:gutentags_ctags_extra_args = ['--exclude=build*']
 " solarized
 syntax enable
 set background=dark
-colorscheme NeoSolarized
+colorscheme gruvbox
 
 " nerd commenter
 let NERDSpaceDelims=1
