@@ -45,7 +45,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (helm-projectile projectile use-package evil-leader))))
+    (evil-org helm-projectile projectile use-package evil-leader))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -70,5 +70,20 @@
   (evil-leader/set-key
     "ps" 'helm-projectile-ag
     "pa" 'helm-projectile-find-file-in-known-projects
-  (evil-leader/set-leader "<SPC>")
   ))
+
+(use-package evil-org
+  :ensure t
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+              (evil-org-set-key-theme)))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys)) 
+
+(use-package zenburn-theme
+  :ensure t
+  :config
+  (load-theme 'zenburn t))
