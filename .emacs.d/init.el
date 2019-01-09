@@ -18,6 +18,9 @@
   (setq helm-autoresize-mode t)
   (setq helm-buffer-max-length 40)
   (global-set-key (kbd "M-x") #'helm-M-x)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x b") 'helm-buffers-list)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
   (define-key helm-map (kbd "S-SPC") 'helm-toggle-visible-mark)
   (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level))
 
@@ -26,7 +29,7 @@
   :ensure t
   :init ;; tweak evil's configuration before loading it
   (setq evil-search-module 'evil-search)
-  (setq evil-ex-complete-emacs-commands nil)
+  ;; (setq evil-ex-complete-emacs-commands nil)
   (setq evil-vsplit-window-right t)
   (setq evil-split-window-below t)
   (setq evil-shift-round nil)
@@ -57,7 +60,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (cmake-ide flycheck-rtags company-rtags rtags flycheck helm-ag evil-magit magit evil-tabs evil-org helm-projectile projectile use-package evil-leader))))
+    (evil-collection cmake-mode cmake-ide flycheck-rtags company-rtags rtags flycheck helm-ag evil-magit magit evil-tabs evil-org helm-projectile projectile use-package evil-leader))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -85,16 +88,8 @@
     "pp" 'helm-projectile-switch-project
   ))
 
-(use-package evil-org
-  :ensure t
-  :after org
-  :config
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (add-hook 'evil-org-mode-hook
-            (lambda ()
-              (evil-org-set-key-theme)))
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+(use-package org
+  :ensure t)
 
 (use-package zenburn-theme
   :ensure t
@@ -105,6 +100,9 @@
 ;;   :ensure evil-tabs
 ;;   :config
 ;;   (global-evil-tabs-mode t))
+
+(use-package cmake-mode
+  :ensure t)
 
 (use-package magit
   :ensure t)
@@ -166,6 +164,7 @@
     "rt" 'rtags-find-symbol-at-point
     "rd" 'rtags-display-summary
     "rr" 'rtags-find-references
+    ;; "b" 'helm-buffers-list
 )
 
 
@@ -180,8 +179,8 @@
 
 ;; Fonts
 (set-face-attribute 'default nil
-                    :family "Hack")
-                    :height 50
+                    :family "Hack"
+                    :height 100)
                     ;; :weight 'normal
                     ;; :width 'normal)
 
@@ -199,3 +198,5 @@
 (c-set-offset 'innamespace 0)
 
 (show-paren-mode 1)
+
+(setq backup-directory-alist '(("." ."~/.emacs.d/saves/")))
