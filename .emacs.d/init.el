@@ -1,3 +1,9 @@
+;;; init.el --- Initialization file for Emacs
+;;; Commentary:
+
+;; Jeremy Feltracco's Emacs configuration
+
+;;; Code:
 ;; load package manager, add the Melpa package registry
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -10,30 +16,33 @@
   (package-install 'use-package))
 (require 'use-package)
 
+(use-package centered-window :ensure t)
+
 ;; load helm
 (use-package helm
   :ensure t
   :config
   (helm-mode 1)
   (setq helm-autoresize-mode t)
-  (setq helm-buffer-max-length 40)
   (global-set-key (kbd "M-x") #'helm-M-x)
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "C-x b") 'helm-buffers-list)
   (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-  (define-key helm-map (kbd "S-SPC") 'helm-toggle-visible-mark)
-  (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level))
+  (define-key helm-map (kbd "S-SPC") 'helm-toggle-visible-mark))
 
 ;; load evil
 (use-package evil
   :ensure t
   :init ;; tweak evil's configuration before loading it
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
   (setq evil-search-module 'evil-search)
   ;; (setq evil-ex-complete-emacs-commands nil)
   (setq evil-vsplit-window-right t)
   (setq evil-split-window-below t)
   (setq evil-shift-round nil)
   (setq evil-want-C-u-scroll t)
+  (setq evil-want-keybinding nil)
   :config ;; tweak evil after loading it
   (evil-mode 1)
 
@@ -53,21 +62,6 @@
   ;; example how to map a command in normal mode (called 'normal state' in evil)
   (define-key evil-normal-state-map (kbd ", w") 'evil-window-vsplit))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (evil-collection cmake-mode cmake-ide flycheck-rtags company-rtags rtags flycheck helm-ag evil-magit magit evil-tabs evil-org helm-projectile projectile use-package evil-leader))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
 ;; load projectile
 (use-package projectile
   :ensure t
@@ -83,10 +77,13 @@
   :ensure t
   :config
   (evil-leader/set-key
-    "ps" 'helm-projectile-ag
+    "ps" 'helm-projectile
     "pa" 'helm-projectile-find-file-in-known-projects
     "pp" 'helm-projectile-switch-project
+    "a" 'helm-projectile-ag
   ))
+
+(require 'helm-projectile)
 
 (use-package org
   :ensure t)
@@ -115,6 +112,8 @@
  :config
  (progn
   (global-flycheck-mode)))
+
+(setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
 (use-package rtags
   :ensure t)
@@ -167,6 +166,14 @@
     ;; "b" 'helm-buffers-list
 )
 
+(use-package evil-collection
+  :after (evil helm helm-projectile)
+  :init
+  (setq evil-collection-setup-minibuffer t)
+  :ensure t
+  :config
+  (evil-collection-init))
+
 
 ;; Evil Changes
 (evil-leader/set-leader "<SPC>")
@@ -197,6 +204,42 @@
 (setq c-default-style "my-cc-mode")
 (c-set-offset 'innamespace 0)
 
+;; Show matching parens
 (show-paren-mode 1)
 
+;; Don't litter directories with temporary save files
 (setq backup-directory-alist '(("." ."~/.emacs.d/saves/")))
+
+;; Open up my user configuration
+(defun er-find-user-init-file ()
+  "Edit the `user-init-file', in another window."
+  (interactive)
+  (find-file user-init-file))
+
+(evil-leader/set-key
+  "fc" 'er-find-user-init-file
+  "mc" 'projectile-compile-project
+  "mr" 'recompile
+  "bb" 'helm-buffers-list
+  "bd" 'kill-buffer
+  "wh" 'evil-window-left
+  "wl" 'evil-window-right
+  "wk" 'evil-window-top
+  "wj" 'evil-window-bottom
+  "ww" 'delete-other-windows
+  )
+
+;; Assume build directory is build/
+;; ((nil . ((cmake-ide-dir . "build"))))
+
+;; Apparently this can be faster if stuck with zsh only?
+(setq shell-file-name "/bin/bash")
+;; Caching helps a ton with fuzzy finding files
+(setq projectile-enable-caching t)
+
+;; Don't write out customizations to this file, throw them into another
+(setq custom-file "~/.emacs.d/custom.el")
+
+
+(provide 'init)
+;;; init.el ends here
