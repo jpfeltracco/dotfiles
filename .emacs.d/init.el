@@ -6,7 +6,7 @@
 ;;; Code:
 ;; load package manager, add the Melpa package registry
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
 
@@ -85,6 +85,7 @@
 
 (require 'helm-projectile)
 
+
 (use-package org
   :ensure t)
 
@@ -115,8 +116,8 @@
 
 (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
-(use-package rtags
-  :ensure t)
+;; (use-package rtags
+;;   :ensure t)
 
 (use-package company
   :ensure t
@@ -126,38 +127,38 @@
     (global-set-key (kbd "M-/") 'company-complete-common-or-cycle)
     (setq company-idle-delay 0)))
 
-(use-package company-rtags
-  :ensure t
-  :config
-  (progn
-    (setq rtags-autostart-diagnostics t)
-    (rtags-diagnostics)
-    (setq rtags-completions-enabled t)
-    (push 'company-rtags company-backends)
-  ))
+;; (use-package company-rtags
+;;   :ensure t
+;;   :config
+;;   (progn
+;;     (setq rtags-autostart-diagnostics t)
+;;     (rtags-diagnostics)
+;;     (setq rtags-completions-enabled t)
+;;     (push 'company-rtags company-backends)
+;;   ))
 
-;; Live code checking.
-(use-package flycheck-rtags
-  :ensure t
-  :config
-  (progn
-    ;; ensure that we use only rtags checking
-    ;; https://github.com/Andersbakken/rtags#optional-1
-    (defun setup-flycheck-rtags ()
-      (flycheck-select-checker 'rtags)
-      (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
-      (setq-local flycheck-check-syntax-automatically nil)
-      (rtags-set-periodic-reparse-timeout 2.0)  ;; Run flycheck 2 seconds after being idle.
-      )
-    (add-hook 'c-mode-hook #'setup-flycheck-rtags)
-    (add-hook 'c++-mode-hook #'setup-flycheck-rtags)
-    ))
+;; ;; Live code checking.
+;; (use-package flycheck-rtags
+;;   :ensure t
+;;   :config
+;;   (progn
+;;     ;; ensure that we use only rtags checking
+;;     ;; https://github.com/Andersbakken/rtags#optional-1
+;;     (defun setup-flycheck-rtags ()
+;;       (flycheck-select-checker 'rtags)
+;;       (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
+;;       (setq-local flycheck-check-syntax-automatically nil)
+;;       (rtags-set-periodic-reparse-timeout 2.0)  ;; Run flycheck 2 seconds after being idle.
+;;       )
+;;     (add-hook 'c-mode-hook #'setup-flycheck-rtags)
+;;     (add-hook 'c++-mode-hook #'setup-flycheck-rtags)
+;;     ))
 
-(use-package cmake-ide
-  :ensure t)
+;; (use-package cmake-ide
+;;   :ensure t)
 
-(require 'rtags)
-(cmake-ide-setup)
+;; (require 'rtags)
+;; (cmake-ide-setup)
 
 (evil-leader/set-key
     "rt" 'rtags-find-symbol-at-point
@@ -174,6 +175,27 @@
   :config
   (evil-collection-init))
 
+(use-package lsp-mode
+  :ensure t
+  :commands lsp)
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+(use-package company-lsp
+  :ensure t
+  :commands company-lsp)
+
+(setq ccls-executable "/usr/local/bin/ccls")
+(use-package ccls
+  :ensure t
+  :hook ((c-mode c++-mode objc-mode) .
+         (lambda () (require 'ccls) (lsp))))
+
+
+
+;; Full screen by Default
+(custom-set-variables
+ '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
 ;; Evil Changes
 (evil-leader/set-leader "<SPC>")
@@ -187,7 +209,7 @@
 ;; Fonts
 (set-face-attribute 'default nil
                     :family "Hack"
-                    :height 100)
+                    :height 120)
                     ;; :weight 'normal
                     ;; :width 'normal)
 
@@ -218,6 +240,7 @@
 
 (evil-leader/set-key
   "fc" 'er-find-user-init-file
+  "fo" 'projectile-find-other-file
   "mc" 'projectile-compile-project
   "mr" 'recompile
   "bb" 'helm-buffers-list
@@ -229,17 +252,22 @@
   "ww" 'delete-other-windows
   )
 
+;; Modify whole word when it has underscores in it
+(with-eval-after-load 'evil
+    (defalias #'forward-evil-word #'forward-evil-symbol))
+
 ;; Assume build directory is build/
 ;; ((nil . ((cmake-ide-dir . "build"))))
 
 ;; Apparently this can be faster if stuck with zsh only?
-(setq shell-file-name "/bin/bash")
+;; (setq shell-file-name "/bin/bash")
 ;; Caching helps a ton with fuzzy finding files
 (setq projectile-enable-caching t)
 
 ;; Don't write out customizations to this file, throw them into another
 (setq custom-file "~/.emacs.d/custom.el")
 
+(add-to-list 'exec-path "/usr/local/bin/")
 
 (provide 'init)
 ;;; init.el ends here
