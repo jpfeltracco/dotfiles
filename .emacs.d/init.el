@@ -119,13 +119,13 @@
 ;; (use-package rtags
 ;;   :ensure t)
 
-(use-package company
-  :ensure t
-  :config
-  (progn
-    (add-hook 'after-init-hook 'global-company-mode)
-    (global-set-key (kbd "M-/") 'company-complete-common-or-cycle)
-    (setq company-idle-delay 0)))
+;; (use-package company
+;;   :ensure t
+;;   :config
+;;   (progn
+;;     (add-hook 'after-init-hook 'global-company-mode)
+;;     (global-set-key (kbd "M-/") 'company-complete-common-or-cycle)
+;;     (setq company-idle-delay 0)))
 
 ;; (use-package company-rtags
 ;;   :ensure t
@@ -175,21 +175,21 @@
   :config
   (evil-collection-init))
 
-(use-package lsp-mode
-  :ensure t
-  :commands lsp)
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-(use-package company-lsp
-  :ensure t
-  :commands company-lsp)
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :commands lsp)
+;; (use-package lsp-ui
+;;   :ensure t
+;;   :commands lsp-ui-mode)
+;; (use-package company-lsp
+;;   :ensure t
+;;   :commands company-lsp)
 
-(setq ccls-executable "/usr/local/bin/ccls")
-(use-package ccls
-  :ensure t
-  :hook ((c-mode c++-mode objc-mode) .
-         (lambda () (require 'ccls) (lsp))))
+;; (setq ccls-executable "/usr/local/bin/ccls")
+;; (use-package ccls
+;;   :ensure t
+;;   :hook ((c-mode c++-mode objc-mode) .
+;;          (lambda () (require 'ccls) (lsp))))
 
 
 
@@ -241,8 +241,10 @@
 (evil-leader/set-key
   "fc" 'er-find-user-init-file
   "fo" 'projectile-find-other-file
-  "mc" 'projectile-compile-project
+  "mp" 'projectile-compile-project
+  "mc" 'compile
   "mr" 'recompile
+  "mk" 'kill-compilation
   "bb" 'helm-buffers-list
   "bd" 'kill-buffer
   "wh" 'evil-window-left
