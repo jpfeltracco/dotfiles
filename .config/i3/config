@@ -21,6 +21,7 @@ exec --no-startup-id nitrogen --restore
 exec --no-startup-id xautolock -time 10 -locker lock
 exec --no-startup-id nm-applet
 exec --no-startup-id udiskie --tray &
+exec --no-startup-id emacs --daemon &
 # exec --no-startup-id neovim_server
 
 # Screen brightness controls
@@ -64,6 +65,7 @@ floating_modifier Mod4
 
 # start a terminal
 bindsym Mod4+Return exec kitty
+bindsym Mod4+Shift+Return exec emacsclient -c -n
 
 # kill focused window
 bindsym Mod4+Shift+q kill
