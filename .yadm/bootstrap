@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-from sys import platform
+import sys
 from subprocess import check_call
 from subprocess import CalledProcessError
 
@@ -59,27 +59,6 @@ def git_clone(url, flags=None, dest=None):
         command_list.append(dest)
     run(command_list)
 
-def vim_plug_setup():
-    plug_install_path = os.path.expanduser("~/.local/share/nvim/site/autoload/plug.vim")
-    plug_url = "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-    vim_plug_install_cmd = (
-        "curl -fLo {} --create-dirs {}".format(plug_install_path, plug_url).split()
-    )
-    run(vim_plug_install_cmd)
-
-    nvim_install_plug_cmd = "nvim +PlugInstall +qall".split()
-    run(nvim_install_plug_cmd)
-
-def gnome_term_solarized():
-    solarized_dir = "/tmp/solarized"
-    if not os.path.isdir(solarized_dir):
-       git_clone(
-           url="https://github.com/Anthony25/gnome-terminal-colors-solarized",
-           dest="/tmp/solarized"
-       )
-       # If dir is cloned, I'll assume it's already run
-       run(os.path.join(solarized_dir, "set_dark.sh"))
-
 def add_to_shell_config(line):
     for config in ["~/.bashrc", "~/.zshrc"]:
         config_path = os.path.expanduser(config)
@@ -106,69 +85,94 @@ def yadm_clone():
     
 
     git_config_name = "git config user.name \"Jeremy Feltracco\""
-    git_config_email = "git config user.email \"jpfeltracco@gmail.com\""
+    email = "jpfeltracco@gmail.com"
+
+    if query_yes_no("Set custom email? Current is: {}".format(email)):
+        email = input("New email: ")
+
+    git_config_email = "git config user.email \"{}\"".format(email)
 
     run(git_config_name.split(), cwd=os.path.expanduser("~/.yadm/repo.git"))
     run(git_config_email.split(), cwd=os.path.expanduser("~/.yadm/repo.git"))
 
-def setup_zsh():
-    zprezto_repo = os.path.expanduser("~/.zprezto")
-
-    # Yadm should add this repo as a submodule now
-    if not os.path.isdir(zprezto_repo):
-       git_clone(
-           url="https://github.com/jpfeltracco/prezto",
-           flags="--recursive",
-           dest=zprezto_repo
-       )
-
-    git_config_name = "git config user.name \"Jeremy Feltracco\""
-    git_config_email = "git config user.email \"jpfeltracco@gmail.com\""
-    run(git_config_name.split(), cwd=os.path.expanduser("~/.zprezto"))
-    run(git_config_email.split(), cwd=os.path.expanduser("~/.zprezto"))
-
-    change_shell_cmd = "chsh -s /bin/zsh"
+def shell_setup():
+    change_shell_cmd = "chsh -s /usr/bin/fish"
     run(change_shell_cmd.split())
-       
-    symlink_setup = "zsh {}/symlink.zsh".format(zprezto_repo)
-    run(symlink_setup.split())
+
+def install_kitty():
+    # I don't like running random bash scripts, but hopefully this one is kosher
+    cmd = "curl -L https://sw.kovidgoyal.net/kitty/installer.sh -o /tmp/installer.sh"
+    run(cmd.split())
+    run("sh /tmp/installer.sh".split(), cwd=os.path.expanduser("~"))
+
+    cmds = []
+    cmds.append("mkdir -p ~/.local/bin")
+    cmds.append("ln -s ~/.local/kitty.app/bin/kitty ~/.local/bin/")
+    cmds.append("cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications")
+    cmds.append("sed -i \"s/Icon\=kitty/Icon\=\/home\/$USER\/.local\/kitty.app\/share\/icons\/hicolor\/256x256\/apps\/kitty.png/g\" ~/.local/share/applications/kitty.desktop")
+
+    for cmd in cmds:
+        # run("bash -c '{}'".format(cmd), shell=True)
+        run(cmd, shell=True)
+
+def query_yes_no(question, default="no"):
+    """Ask a yes/no question via input() and return their answer.
+
+    From: https://stackoverflow.com/questions/3041986/apt-command-line-interface-like-yes-no-input
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
 
 #################################
 ##### Setup Functions
 #################################
 def linux_setup(): 
-    # Should only run if neovim isn't already installed
-    neovim_installed = pkg_check_installed("neovim")
 
-    pkg_list = ["git", "yadm", "zsh", "curl", "exuberant-ctags"]
+    print_section("Install packages")
+    if query_yes_no("Install apt packages?"):
+        pkg_list = ["fish", "git", "yadm", "curl", "emacs", "i3"]
 
+        apt_get_pkgs(pkg_list)
 
-    if not neovim_installed:
-        print_section("Add Neovim PPA")
-        apt_add_repo("ppa:neovim-ppa/stable")
-        apt_get_update()
-        pkg_list.append("neovim")
+    if "fish" not in os.environ["SHELL"] and query_yes_no("Set Fish as default shell?"):
+        shell_setup()
 
-    pip3_install_nvr = "pip3 install neovim-remote"
-    run(pip3_install_nvr.split())
+    if query_yes_no("Install Kitty?"):
+        install_kitty()
 
-    print_section("Install apt-get packages")
-    apt_get_pkgs(pkg_list)
-
-    print_section("Install yadm (dotfiles)")
-    yadm_clone()
-
-    print_section("Install Vim Plug")
-    vim_plug_setup()
-
-    print_section("Setting gnome terminal solarized")
-    gnome_term_solarized()
-
-    setup_zsh()
+    if query_yes_no("Clone yadm dotfiles?"):
+        yadm_clone()
 
 def macos_setup():
     print_section("Install brew packages")
-    brew_install_pkgs("git neovim yadm")
+    brew_install_pkgs("git yadm emacs")
+    install_kitty()
 
     print_section("Install Vim Plug")
     vim_plug_setup()
@@ -177,7 +181,7 @@ def macos_setup():
 ##### Main
 #################################
 if __name__ == "__main__":
-    if platform == "linux" or platform == "linux2":
+    if sys.platform == "linux" or sys.platform == "linux2":
         # Assume all linux is debian, I know, it's bad
         linux_setup()
     elif platform == "darwin":
