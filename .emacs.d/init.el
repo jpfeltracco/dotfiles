@@ -209,7 +209,7 @@
 ;; Fonts
 (set-face-attribute 'default nil
                     :family "Hack"
-                    :height 120)
+                    :height 100)
                     ;; :weight 'normal
                     ;; :width 'normal)
 

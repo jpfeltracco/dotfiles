@@ -156,7 +156,7 @@ def linux_setup():
 
     print_section("Install packages")
     if query_yes_no("Install apt packages?"):
-        pkg_list = ["fish", "git", "yadm", "curl", "emacs", "i3"]
+        pkg_list = ["fish", "git", "yadm", "curl", "emacs", "i3", "fonts-hack-ttf"]
 
         apt_get_pkgs(pkg_list)
 
