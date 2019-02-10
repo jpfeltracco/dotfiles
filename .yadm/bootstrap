@@ -92,11 +92,16 @@ def yadm_clone():
 
     git_config_email = "git config user.email \"{}\"".format(email)
 
+
+    if query_yes_no("Generate ssh keys?"):
+        cmd = "ssh-keygen -t rsa -b 4096 -C {}".format(email).split(" ")
+        run(cmd)
+
     run(git_config_name.split(), cwd=os.path.expanduser("~/.yadm/repo.git"))
     run(git_config_email.split(), cwd=os.path.expanduser("~/.yadm/repo.git"))
 
 def shell_setup():
-    change_shell_cmd = "chsh -s /usr/bin/fish"
+    change_shell_cmd = "chsh -s /bin/zsh"
     run(change_shell_cmd.split())
 
 def install_kitty():
@@ -156,12 +161,12 @@ def linux_setup():
 
     print_section("Install packages")
     if query_yes_no("Install apt packages?"):
-        pkg_list = ["fish", "git", "yadm", "curl", "emacs", "i3", "fonts-hack-ttf",
-                    "nitrogen"]
+        pkg_list = ["zsh", "scrot", "xautolock", "git", "yadm",
+                    "curl", "emacs", "i3", "fonts-hack-ttf", "nitrogen"]
 
         apt_get_pkgs(pkg_list)
 
-    if "fish" not in os.environ["SHELL"] and query_yes_no("Set Fish as default shell?"):
+    if "zsh" not in os.environ["SHELL"] and query_yes_no("Set Zsh as default shell?"):
         shell_setup()
 
     if query_yes_no("Install Kitty?"):
@@ -169,6 +174,7 @@ def linux_setup():
 
     if query_yes_no("Clone yadm dotfiles?"):
         yadm_clone()
+
 
 def macos_setup():
     print_section("Install brew packages")
