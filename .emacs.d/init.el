@@ -108,13 +108,13 @@
 (use-package evil-magit
   :ensure t)
 
-(use-package flycheck
- :ensure t
- :config
- (progn
-  (global-flycheck-mode)))
+;; (use-package flycheck
+;;  :ensure t
+;;  :config
+;;  (progn
+;;   (global-flycheck-mode)))
 
-(setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+;; (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
 ;; (use-package rtags
 ;;   :ensure t)
@@ -209,7 +209,7 @@
 ;; Fonts
 (set-face-attribute 'default nil
                     :family "Hack"
-                    :height 120)
+                    :height 100)
                     ;; :weight 'normal
                     ;; :width 'normal)
 
