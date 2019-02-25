@@ -1,0 +1,6 @@
+colorscheme gruvbox
+set global grepcmd 'ag'
+
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+plug "andreyorst/fzf.kak"
+
