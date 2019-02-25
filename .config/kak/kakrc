@@ -1,6 +1,9 @@
 colorscheme gruvbox
 set global grepcmd 'ag'
 
-source "%val{config}/plugins/plug.kak/rc/plug.kak"
-plug "andreyorst/fzf.kak"
+def find -params 1 -shell-script-candidates %{ find -type f } %{ edit %arg{1} }
+def git-edit -params 1 -shell-script-candidates %{ git ls-files --recurse-submodules } %{ edit %arg{1} }
+
+#source "%val{config}/plugins/plug.kak/rc/plug.kak"
+#plug "andreyorst/fzf.kak"
 
