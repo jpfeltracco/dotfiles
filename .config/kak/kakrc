@@ -1,8 +1,26 @@
 colorscheme gruvbox
+
+# Use ag for grepping
 set global grepcmd 'ag'
+set global termcmd 'gnome-terminal -e '
 
 def find -params 1 -shell-script-candidates %{ find -type f } %{ edit %arg{1} }
 def git-edit -params 1 -shell-script-candidates %{ git ls-files --recurse-submodules } %{ edit %arg{1} }
+
+## USER MODE BINDINGS
+# File bindings
+map global user 0 ': e ~/notes/notes.md<ret>' -docstring 'Open notes'
+map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
+# Command bindings
+map global user p ': git-edit ' -docstring 'Search git files'
+map global user a ': grep ' -docstring 'Grep for file contents'
+map global user w ': new<ret>' -docstring 'Open a new window'
+# map global user t ': new
+
+# space is my leader
+map global normal <space> , -docstring 'leader'
+map global normal <backspace> <space> -docstring 'remove all sels except main'
+map global normal <a-backspace> <a-space> -docstring 'remove main sel'
 
 #source "%val{config}/plugins/plug.kak/rc/plug.kak"
 #plug "andreyorst/fzf.kak"
