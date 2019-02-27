@@ -2,6 +2,8 @@ colorscheme gruvbox
 
 # Use ag for grepping
 set global grepcmd 'ag'
+
+# set global termcmd 'kitty-terminal '
 set global termcmd 'gnome-terminal -e '
 
 def find -params 1 -shell-script-candidates %{ find -type f } %{ edit %arg{1} }
@@ -15,7 +17,8 @@ map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
 map global user p ': git-edit ' -docstring 'Search git files'
 map global user a ': grep ' -docstring 'Grep for file contents'
 map global user w ': new<ret>' -docstring 'Open a new window'
-# map global user t ': new
+map global user u ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
+map global user t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>'
 
 # space is my leader
 map global normal <space> , -docstring 'leader'
