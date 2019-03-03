@@ -26,6 +26,8 @@ evaluate-commands %sh{
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
 }
 
+
+
 ## USER MODE BINDINGS
 # File bindings
 map global user 0 ': e ~/notes/notes.md<ret>' -docstring 'Open notes'
@@ -47,6 +49,12 @@ map global normal <a-backspace> <a-space> -docstring 'remove main sel'
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
 plug "andreyorst/fzf.kak"
 
+define-command -hidden fzf-ag %{ evaluate-commands %sh{
+    cmd="ag --nobreak --nonumbers --noheading ."
+    additional_flags="--delimiter=: --nth=2.."
+    printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
+}}
+set-option global fzf_preview false
 set-option global fzf_file_command 'ag'
 
 hook global InsertChar \t %{ exec -draft -itersel h@ }
