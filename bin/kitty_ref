@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# execute command, then return to current shell regardless of command exit code
+cmd="$@; kitty @ focus-window --match id:$KITTY_WINDOW_ID"
+
+kitty @ new-window --no-response sh -c "$cmd"

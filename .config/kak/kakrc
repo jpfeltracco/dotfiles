@@ -8,7 +8,8 @@ set global grepcmd 'ag'
 #set global termcmd 'gnome-terminal -e '
 
 #set global termcmd 'kitty @ new-window --no-response '
-set global termcmd 'kitty_new'
+#set global termcmd 'kitty_new'
+set global termcmd 'kitty_ref'
 
 
 evaluate-commands %sh{
@@ -28,7 +29,6 @@ evaluate-commands %sh{
 map global user 0 ': e ~/notes/notes.md<ret>' -docstring 'Open notes'
 map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
 # Command bindings
-# map global user p ': git-edit ' -docstring 'Search git files'
 map global user f ': fzf-mode<ret>' -docstring 'Search files'
 map global user a ': grep ' -docstring 'Grep for file contents'
 map global user w ': new<ret>' -docstring 'Open a new window'
