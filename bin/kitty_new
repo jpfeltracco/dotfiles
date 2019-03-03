@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# This removes apostrophes (') from input,
+# then calls the normal kitty new. This was required
+# to get fzf working in kakoune
+
+tmp="${@%\'}"
+tmp="${tmp#\'}"
+
+kitty @ new-window --no-response $tmp

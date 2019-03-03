@@ -3,11 +3,28 @@ colorscheme gruvbox
 # Use ag for grepping
 set global grepcmd 'ag'
 
-# set global termcmd 'kitty-terminal '
-set global termcmd 'gnome-terminal -e '
+#set global termcmd 'kitty-terminal '
+#set global termcmd 'kitty '
+#set global termcmd 'gnome-terminal -e '
+
+#set global termcmd 'kitty @ new-window --no-response '
+set global termcmd 'kitty_new'
+
 
 def find -params 1 -shell-script-candidates %{ find -type f } %{ edit %arg{1} }
 def git-edit -params 1 -shell-script-candidates %{ git ls-files --recurse-submodules } %{ edit %arg{1} }
+
+evaluate-commands %sh{
+    case $(uname) in
+        Linux) copy="xclip -i"; paste="xclip -o" ;;
+        Darwin)  copy="pbcopy"; paste="pbpaste" ;;
+    esac
+
+    printf "map global user -docstring 'paste (after) from clipboard' p '!%s<ret>'\n" "$paste"
+    printf "map global user -docstring 'paste (before) from clipboard' P '<a-!>%s<ret>'\n" "$paste"
+    printf "map global user -docstring 'yank to clipboard' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 clipboard}<ret>'\n" "$copy"
+    printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
+}
 
 ## USER MODE BINDINGS
 # File bindings
@@ -15,7 +32,7 @@ map global user 0 ': e ~/notes/notes.md<ret>' -docstring 'Open notes'
 map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
 # Command bindings
 # map global user p ': git-edit ' -docstring 'Search git files'
-map global user p ': fzf-mode<ret>' -docstring 'Search files'
+map global user f ': fzf-mode<ret>' -docstring 'Search files'
 map global user a ': grep ' -docstring 'Grep for file contents'
 map global user w ': new<ret>' -docstring 'Open a new window'
 map global user u ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
