@@ -11,9 +11,6 @@ set global grepcmd 'ag'
 set global termcmd 'kitty_new'
 
 
-def find -params 1 -shell-script-candidates %{ find -type f } %{ edit %arg{1} }
-def git-edit -params 1 -shell-script-candidates %{ git ls-files --recurse-submodules } %{ edit %arg{1} }
-
 evaluate-commands %sh{
     case $(uname) in
         Linux) copy="xclip -i"; paste="xclip -o" ;;
@@ -25,8 +22,6 @@ evaluate-commands %sh{
     printf "map global user -docstring 'yank to clipboard' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 clipboard}<ret>'\n" "$copy"
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
 }
-
-
 
 ## USER MODE BINDINGS
 # File bindings
@@ -54,9 +49,10 @@ define-command -hidden fzf-ag %{ evaluate-commands %sh{
     additional_flags="--delimiter=: --nth=2.."
     printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
 }}
+map global fzf -docstring "ag files" 'a' '<esc>: fzf-ag<ret>'
 set-option global fzf_preview false
-set-option global fzf_file_command 'ag'
-
+#set-option global fzf_file_command 'ag'
+set-option global fzf_file_command 'ag -l -f --one-device .'
 hook global InsertChar \t %{ exec -draft -itersel h@ }
 set global tabstop 4
 set global indentwidth 4
