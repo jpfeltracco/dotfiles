@@ -33,26 +33,34 @@ map global user f ': fzf-mode<ret>' -docstring 'Search files'
 map global user a ': grep ' -docstring 'Grep for file contents'
 map global user w ': new<ret>' -docstring 'Open a new window'
 map global user u ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
-map global user t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>'
-map global user c ': comment-line<ret>'
+map global user t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>' -docstring 'Run terminal in current buffer directory'
+map global user c ': comment-line<ret>' -docstring 'Comment line'
 
 # space is my leader
 map global normal <space> , -docstring 'leader'
 map global normal <backspace> <space> -docstring 'remove all sels except main'
 map global normal <a-backspace> <a-space> -docstring 'remove main sel'
 
+# Plug variables
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
 plug "andreyorst/fzf.kak"
+plug "ul/kak-lsp" do %{
+    cargo build --release --locked
+    cargo install --force
+}
 
+# Fuzzy search everything through fzf!
 define-command -hidden fzf-ag %{ evaluate-commands %sh{
-    cmd="ag --nobreak --nonumbers --noheading ."
-    additional_flags="--delimiter=: --nth=2.."
+    cmd="ag --nobreak --noheading ."
+    additional_flags="--delimiter=:  --nth=3.. | cut -d ':' -f1 -f2 | tr ':' ' '"
     printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
 }}
 map global fzf -docstring "ag files" 'a' '<esc>: fzf-ag<ret>'
 set-option global fzf_preview false
 #set-option global fzf_file_command 'ag'
 set-option global fzf_file_command 'ag -l -f --one-device .'
+
+add-highlighter global/ number-lines
 hook global InsertChar \t %{ exec -draft -itersel h@ }
 set global tabstop 4
 set global indentwidth 4

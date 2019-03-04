@@ -3,4 +3,6 @@
 # execute command, then return to current shell regardless of command exit code
 cmd="$@; kitty @ focus-window --match id:$KITTY_WINDOW_ID"
 
-kitty @ new-window --no-response sh -c "$cmd"
+kitty @ new-window --no-response --new-tab --tab-title fzf sh -c "$cmd"
+# kitty @ goto-layout stack
+#kitty @ new-window --no-response sh -c "$cmd"
