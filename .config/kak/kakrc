@@ -49,12 +49,12 @@ lsp-enable
 # Fuzzy search everything through fzf!
 define-command -hidden fzf-ag %{ evaluate-commands %sh{
     cmd="ag --nobreak --noheading ."
-    additional_flags="--delimiter=:  --nth=3.. | cut -d ':' -f1 -f2 | tr ':' ' '"
+    additional_flags="--delimiter=:  --nth=3.. | cut -d ':' -f1,2 | tr ':' ' '"
     printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
 }}
 map global fzf -docstring "ag files" 'a' '<esc>: fzf-ag<ret>'
 set-option global fzf_preview false
-set-option global fzf_file_command 'ag -l -f --one-device .'
+set-option global fzf_file_command 'ag -l -f --one-device --silent .'
 
 add-highlighter global/ number-lines
 hook global InsertChar \t %{ exec -draft -itersel h@ }
