@@ -2,14 +2,7 @@ colorscheme gruvbox
 
 # Use ag for grepping
 set global grepcmd 'ag'
-
-#set global termcmd 'kitty-terminal '
-#set global termcmd 'kitty '
-#set global termcmd 'gnome-terminal -e '
-
-#set global termcmd 'kitty @ new-window --no-response '
-#set global termcmd 'kitty_new'
-set global termcmd 'kitty_ref'
+set global termcmd 'nk '
 
 
 evaluate-commands %sh{
@@ -35,6 +28,7 @@ map global user w ': new<ret>' -docstring 'Open a new window'
 map global user u ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
 map global user t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>' -docstring 'Run terminal in current buffer directory'
 map global user c ': comment-line<ret>' -docstring 'Comment line'
+map global user l ': enter-user-mode lsp<ret>' -docstring 'Enter LSP user mode'
 
 # space is my leader
 map global normal <space> , -docstring 'leader'
@@ -49,6 +43,9 @@ plug "ul/kak-lsp" do %{
     cargo install --force
 }
 
+# enable kak-lsp
+lsp-enable
+
 # Fuzzy search everything through fzf!
 define-command -hidden fzf-ag %{ evaluate-commands %sh{
     cmd="ag --nobreak --noheading ."
@@ -57,7 +54,6 @@ define-command -hidden fzf-ag %{ evaluate-commands %sh{
 }}
 map global fzf -docstring "ag files" 'a' '<esc>: fzf-ag<ret>'
 set-option global fzf_preview false
-#set-option global fzf_file_command 'ag'
 set-option global fzf_file_command 'ag -l -f --one-device .'
 
 add-highlighter global/ number-lines
