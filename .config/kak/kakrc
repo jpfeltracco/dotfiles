@@ -111,7 +111,15 @@ set global termcmd 'nkw '
 add-highlighter global/ number-lines
 
 # tab stop
-hook global InsertChar \t %{ exec -draft -itersel h@ }
+# hook global InsertChar \t %{ exec -draft -itersel h@ }
+
+hook global InsertChar \t %{ try %{
+  execute-keys -draft "h<a-h><a-k>\A\h+\z<ret><a-;>;%opt{indentwidth}@"
+}}
+hook global InsertDelete ' ' %{ try %{
+  execute-keys -draft 'h<a-h><a-k>\A\h+\z<ret>i<space><esc><lt>'
+}}
+
 set global tabstop 4
 set global indentwidth 4
 
