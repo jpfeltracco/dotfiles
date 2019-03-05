@@ -25,7 +25,7 @@ map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
 map global user f ': fzf-mode<ret>' -docstring 'Search files'
 map global user a ': grep ' -docstring 'Grep for file contents'
 map global user w ': new<ret>' -docstring 'Open a new window'
-map global user u ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
+# map global user u ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
 map global user t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>' -docstring 'Run terminal in current buffer directory'
 map global user c ': comment-line<ret>' -docstring 'Comment line'
 map global user l ': enter-user-mode lsp<ret>' -docstring 'Enter LSP user mode'
@@ -53,6 +53,14 @@ define-command -hidden fzf-ag %{ evaluate-commands %sh{
     printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
 }}
 map global fzf -docstring "ag files" 'a' '<esc>: fzf-ag<ret>'
+
+define-command -hidden fzf-gitgrep %{ evaluate-commands %sh{
+    cmd="git grep ."
+    additional_flags="--delimiter=:  --nth=3.. | cut -d ':' -f1,2 | tr ':' ' '"
+    printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
+}}
+map global fzf -docstring "ag files" 'a' '<esc>: fzf-ag<ret>'
+map global fzf -docstring "git-grep files" 'g' '<esc>: fzf-gitgrep<ret>'
 set-option global fzf_preview false
 set-option global fzf_file_command 'ag -l -f --one-device --silent .'
 
