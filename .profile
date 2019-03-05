@@ -31,3 +31,4 @@ if [ -d "$HOME/.fzf/bin" ]; then
 fi
 
 export PATH="$HOME/.cargo/bin:$PATH"
+export ARDU_SIM_ROOT=/home/jpfeltracco/repos/gtri/gtri-uav-simulation/ArduPilot
