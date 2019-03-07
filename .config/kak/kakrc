@@ -4,7 +4,7 @@
 
 # Plug variables
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
-plug "andreyorst/fzf.kak"
+plug "jpfeltracco/fzf.kak"
 plug "ul/kak-lsp" do %{
     cargo build --release --locked
     cargo install --force
@@ -19,7 +19,7 @@ lsp-enable
 
 evaluate-commands %sh{
     case $(uname) in
-        Linux) copy="xclip -i"; paste="xclip -o" ;;
+        Linux) copy="xclip -i -selection clipboard"; paste="xclip -o" ;;
         Darwin)  copy="pbcopy"; paste="pbpaste" ;;
     esac
 
@@ -29,23 +29,52 @@ evaluate-commands %sh{
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
 }
 
-define-command kitty-term-zsh -params .. -shell-completion -docstring '
+
+#set-option global termcmd 'cmd="$@; kitty @ focus-window -m id:$kak_client_env_KITTY_WINDOW_ID" kitty @ new-window --no-response sh -c "$cmd"'
+
+#hook global FocusIn .* %{ echo -debug focus in }
+
+#set-option global termcmd "$kak_client_env_KITTY_WINDOW_ID" # && nkw "
+set-option global termcmd "nkw"
+#set-option global termcmd 'KITTY_WINDOW_ID=%val{client_env_KITTY_WINDOW_ID} && nkw'
+#set-option global termcmd "nkw"
+
+
+#set-option global termcmd "KITTY_WINDOW_ID=\%val{client_env_KITTY_WINDOW_ID} && nkw "
+#set-option global termcmd "printf ""%s"" hello
+
+define-command kitty-term -params .. -shell-completion -docstring '
 kitty-repl [<arguments>]: create a new window for repl interaction
 All optional parameters are forwarded to the new window' \
 %{
     nop %sh{
-        if [ $# -eq 0 ]; then
-            cmd="${SHELL:-/bin/sh}"
-        else
-            cmd="${SHELL:-/bin/sh} -c $*"
-        fi
-        kitty @ new-window --no-response --window-type $kak_opt_kitty_window_type --title kak_repl_window --cwd "$PWD" $cmd < /dev/null > /dev/null 2>&1 &
+        cmd="$@; kitty @ focus-window -m id:$kak_client_env_KITTY_WINDOW_ID"
+        kitty @ new-window --no-response --window-type $kak_opt_kitty_window_type --title kak_repl_window --cwd "$PWD" sh -c "$cmd" < /dev/null > /dev/null 2>&1 &
     }
 }
 
+#set-option global termcmd "kitty-term"
+
+
+# set global termcmd %{ %sh{
+#     # echo $kak_client_env_KITTY_WINDOW_ID
+#     KITTY_WINDOW_ID=$kak_client_env_KITTY_WINDOW_ID nkw sh
+# }}
+# Careful handling of KITTY_WINDOW_ID so that we always return to the correct
+# window after closing a buffer (like fzf buffers)
+# define-command kitty-term-zsh-win -params .. -shell-completion -docstring '
+# kitty-term-zsh-win [<arguments>]: create a new kitty window' \
+# %{
+#     nop %sh{
+#         export KITTY_WINDOW_ID=$kak_client_env_KITTY_WINDOW_ID;
+#         nkw "$@"
+#     }
+# }
+# set global termcmd 'export KITTY_WINDOW_ID=$kak_client_env_KITTY_WINDOW_ID; nkw '
+
 # disable kitty integration, we roll our own
 remove-hooks global kitty-hooks
-alias global terminal kitty-term-zsh
+alias global terminal kitty-term
 
 # User mode for searching file contents
 declare-user-mode ag
@@ -90,7 +119,7 @@ map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
 # Command bindings
 map global user f ': fzf-mode<ret>' -docstring 'Search files'
 # map global user a ': grep ' -docstring 'Grep for file contents'
-map global user w ': new<ret>' -docstring 'Open a new window'
+map global user w ': terminal kak -c %val{session}<ret>' -docstring 'Open a new window'
 map global user u ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
 map global user t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>' -docstring 'Run terminal in current buffer directory'
 map global user c ': comment-line<ret>' -docstring 'Comment line'
@@ -105,7 +134,6 @@ map global user a ':enter-user-mode<space>ag<ret>'
 
 # Use ag for grepping
 set global grepcmd 'ag'
-set global termcmd 'nkw '
 
 # line numbers
 add-highlighter global/ number-lines

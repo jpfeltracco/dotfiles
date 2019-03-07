@@ -2,8 +2,13 @@
 
 # kitty new window
 
+# echo $kak_client_env_X
+
 # execute command, then return to current shell regardless of command exit code
-cmd="$@; kitty @ focus-window --match id:$KITTY_WINDOW_ID"
+#cmd="echo $kak_client_env_KITTY_WINDOW_ID; $@; kitty @ focus-window --match id:$KITTY_WINDOW_ID"
+cmd="echo $KITTY_WINDOW_ID; $@; kitty @ focus-window --match id:$KITTY_WINDOW_ID"
+
+#echo $cmd
 
 kitty @ new-window --no-response sh -c "$cmd"
 # kitty @ goto-layout stack
