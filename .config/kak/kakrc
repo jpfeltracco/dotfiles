@@ -9,6 +9,7 @@ plug "ul/kak-lsp" do %{
     cargo build --release --locked
     cargo install --force
 }
+plug "occivink/kakoune-gdb"
 
 # enable kak-lsp
 lsp-enable
@@ -76,6 +77,16 @@ All optional parameters are forwarded to the new window' \
 remove-hooks global kitty-hooks
 alias global terminal kitty-term
 
+# User mode
+declare-user-mode win
+
+map global user w ':enter-user-mode<space>win<ret>'
+map global win w ': terminal kak -c %val{session}<ret>' -docstring 'Open a new window'
+map global win t ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
+map global win g ': terminal shell-run source git-root-go<ret>' -docstring 'New terminal in git root'
+map global win b ': terminal shell-run source git-root-go-build<ret>' -docstring 'New terminal in git root build dir'
+# map global win t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>' -docstring 'Run terminal in current buffer directory'
+
 # User mode for searching file contents
 declare-user-mode ag
 
@@ -119,9 +130,6 @@ map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
 # Command bindings
 map global user f ': fzf-mode<ret>' -docstring 'Search files'
 # map global user a ': grep ' -docstring 'Grep for file contents'
-map global user w ': terminal kak -c %val{session}<ret>' -docstring 'Open a new window'
-map global user u ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
-map global user t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>' -docstring 'Run terminal in current buffer directory'
 map global user c ': comment-line<ret>' -docstring 'Comment line'
 map global user l ': enter-user-mode lsp<ret>' -docstring 'Enter LSP user mode'
 
