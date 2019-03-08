@@ -77,6 +77,16 @@ All optional parameters are forwarded to the new window' \
 remove-hooks global kitty-hooks
 alias global terminal kitty-term
 
+# GDB Mode
+decalre-user-mode gdb
+
+map global user ':enter-user-mode<space>gdb<ret>'
+
+map global gdb i ': gdb-session-connect<ret>' -docstring 'Initialize'
+map global gdb c ': gdb-continue<ret>' -docstring 'Continue'
+map global gdb n ': gdb-next<ret>' -docstring 'Next'
+map global gdb p ': gdb-print ' -docstring 'Print'
+
 # User mode
 declare-user-mode win
 

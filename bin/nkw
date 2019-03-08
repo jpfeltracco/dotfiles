@@ -18,6 +18,6 @@ cmd="echo $KITTY_WINDOW_ID;$ag; kitty @ focus-window --match id:$KITTY_WINDOW_ID
 
 #args $cmd
 
-kitty @ new-window --no-response sh -c "$cmd; sh"
+kitty @ new-window --no-response sh -c "$cmd"
 # kitty @ goto-layout stack
 #kitty @ new-window --no-response sh -c "$cmd"
