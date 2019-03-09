@@ -78,19 +78,23 @@ remove-hooks global kitty-hooks
 alias global terminal kitty-term
 
 # GDB Mode
-decalre-user-mode gdb
+declare-user-mode gdb
 
-map global user ':enter-user-mode<space>gdb<ret>'
+map global user g ':enter-user-mode<space>gdb<ret>'
 
 map global gdb i ': gdb-session-connect<ret>' -docstring 'Initialize'
 map global gdb c ': gdb-continue<ret>' -docstring 'Continue'
 map global gdb n ': gdb-next<ret>' -docstring 'Next'
+map global gdb s ': gdb-step<ret>' -docstring 'Step'
 map global gdb p ': gdb-print ' -docstring 'Print'
+map global gdb b ': gdb-toggle-breakpoint<ret>' -docstring 'Toggle breakpoint'
+map global gdb a ': gdb-toggle-autojump<ret>' -docstring 'Print'
 
 # User mode
 declare-user-mode win
 
 map global user w ':enter-user-mode<space>win<ret>'
+
 map global win w ': terminal kak -c %val{session}<ret>' -docstring 'Open a new window'
 map global win t ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
 map global win g ': terminal shell-run source git-root-go<ret>' -docstring 'New terminal in git root'
