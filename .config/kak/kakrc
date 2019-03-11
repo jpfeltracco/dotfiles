@@ -30,52 +30,7 @@ evaluate-commands %sh{
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
 }
 
-
-#set-option global termcmd 'cmd="$@; kitty @ focus-window -m id:$kak_client_env_KITTY_WINDOW_ID" kitty @ new-window --no-response sh -c "$cmd"'
-
-#hook global FocusIn .* %{ echo -debug focus in }
-
-#set-option global termcmd "$kak_client_env_KITTY_WINDOW_ID" # && nkw "
-set-option global termcmd "nkw"
-#set-option global termcmd 'KITTY_WINDOW_ID=%val{client_env_KITTY_WINDOW_ID} && nkw'
-#set-option global termcmd "nkw"
-
-
-#set-option global termcmd "KITTY_WINDOW_ID=\%val{client_env_KITTY_WINDOW_ID} && nkw "
-#set-option global termcmd "printf ""%s"" hello
-
-define-command kitty-term -params .. -shell-completion -docstring '
-kitty-repl [<arguments>]: create a new window for repl interaction
-All optional parameters are forwarded to the new window' \
-%{
-    nop %sh{
-        cmd="$@; kitty @ focus-window -m id:$kak_client_env_KITTY_WINDOW_ID"
-        kitty @ new-window --no-response --window-type $kak_opt_kitty_window_type --title kak_repl_window --cwd "$PWD" sh -c "$cmd" < /dev/null > /dev/null 2>&1 &
-    }
-}
-
-#set-option global termcmd "kitty-term"
-
-
-# set global termcmd %{ %sh{
-#     # echo $kak_client_env_KITTY_WINDOW_ID
-#     KITTY_WINDOW_ID=$kak_client_env_KITTY_WINDOW_ID nkw sh
-# }}
-# Careful handling of KITTY_WINDOW_ID so that we always return to the correct
-# window after closing a buffer (like fzf buffers)
-# define-command kitty-term-zsh-win -params .. -shell-completion -docstring '
-# kitty-term-zsh-win [<arguments>]: create a new kitty window' \
-# %{
-#     nop %sh{
-#         export KITTY_WINDOW_ID=$kak_client_env_KITTY_WINDOW_ID;
-#         nkw "$@"
-#     }
-# }
-# set global termcmd 'export KITTY_WINDOW_ID=$kak_client_env_KITTY_WINDOW_ID; nkw '
-
-# disable kitty integration, we roll our own
-remove-hooks global kitty-hooks
-alias global terminal kitty-term
+set-option global termcmd "kitty @ new-window --no-response "
 
 # GDB Mode
 declare-user-mode gdb
