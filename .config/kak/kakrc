@@ -20,7 +20,7 @@ lsp-enable
 
 evaluate-commands %sh{
     case $(uname) in
-        Linux) copy="xclip -i -selection clipboard"; paste="xclip -o" ;;
+        Linux) copy="xclip -i -selection clipboard"; paste="xclip -o -selection clipboard" ;;
         Darwin)  copy="pbcopy"; paste="pbpaste" ;;
     esac
 
@@ -131,6 +131,9 @@ map global ag -docstring "git-grep files" 'g' '<esc>: fzf-gitgrep<ret>'
 set-option global fzf_preview false
 set-option global fzf_file_command 'ag -l -f --one-device --silent .'
 
+hook global BufCreate .*\.launch %{
+    set-option buffer filetype xml
+}
 
 #############################################################################
 ## USER MODE BINDINGS
