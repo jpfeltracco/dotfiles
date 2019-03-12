@@ -54,7 +54,7 @@ command = "pyls"
 
 [language.c_cpp]
 filetypes = ["c", "cpp", "h", "hh", "cc"]
-roots = ["compile_commands.json", ".ccls", ".git"]
+roots = ["compile_commands.json"] #, ".ccls", ".git"]
 command = "ccls"
 # args = ["--init={\"cacheDirectory\":\"/tmp/cquery\",\"highlight\":{\"enabled\":true}}"]
 
