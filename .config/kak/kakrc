@@ -110,6 +110,11 @@ map global normal <space> , -docstring 'leader'
 map global normal <backspace> <space> -docstring 'remove all sels except main'
 map global normal <a-backspace> <a-space> -docstring 'remove main sel'
 
+map -docstring 'case insensitive search' global user '/' /(?i)
+map -docstring 'case insensitive backward search' global user '<a-/>' <a-/>(?i)
+map -docstring 'case insensitive extend search' global user '?' ?(?i)
+map -docstring 'case insensitive backward extend-search' global user '<a-?>' <a-?>(?i)
+
 map global user a ':enter-user-mode<space>ag<ret>'
 
 # Use ag for grepping
