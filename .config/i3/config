@@ -15,14 +15,12 @@ exec --no-startup-id setxkbmap -option ctrl:nocaps
 exec --no-startup-id xsetroot -solid "#073642"
 # Hide cursor when idle
 exec --no-startup-id unclutter -noevents
-
-exec --no-startup-id compton
 exec --no-startup-id nitrogen --restore
 exec --no-startup-id xautolock -time 10 -locker lock
 exec --no-startup-id nm-applet
 exec --no-startup-id udiskie --tray &
-exec --no-startup-id emacs --daemon &
-# exec --no-startup-id neovim_server
+
+# exec --no-startup-id compton
 
 # Screen brightness controls
 bindsym XF86MonBrightnessUp exec bright_up # increase screen brightness
@@ -41,15 +39,15 @@ for_window [title="JidePopup"] floating enable
 
 # if not already running, create a "drop" terminal, it'll service kakoune requests
 # exec_always --no-startup-id drop.sh
-exec_always --no-startup-id xdotool search --class "drop || kitty --class="drop"
+# exec_always --no-startup-id xdotool search --class "drop" || kitty --class="drop"
                                                                                  
-for_window [class="^drop$"] border pixel 2
-for_window [class="^drop$"] floating enable
-for_window [class="^drop$"] move position 0 800 # tied to screen resolution unfortunately
-for_window [class="^drop$"] move scratchpad
-# for_window [class="^drop$"] scratchpad hide
+for_window [class="^drop_kitty_terminal$"] border pixel 1
+for_window [class="^drop_kitty_terminal$"] floating enable
+for_window [class="^drop_kitty_terminal$"] move position 0 700
+for_window [class="^drop_kitty_terminal$"] resize set 1920 355
+# for_window [class="^drop_kitty_terminal$"] move scratchpad
 
-# bindsym Mod4+p [class="^drop$"] scratchpad show; resize set 1920 280
+bindsym Mod4+p exec drop.sh
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -77,8 +75,7 @@ set $right l
 floating_modifier Mod4
 
 # start a terminal
-bindsym Mod4+Return exec gnome-terminal
-bindsym Mod4+Shift+Return exec emacsclient -c -n
+bindsym Mod4+Return exec kitty --single-instance
 
 # kill focused window
 bindsym Mod4+Shift+q kill

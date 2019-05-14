@@ -56,7 +56,8 @@ command = "pyls"
 filetypes = ["c", "cpp", "h", "hh", "cc"]
 roots = ["compile_commands.json"] #, ".ccls", ".git"]
 command = "ccls"
-# args = ["--init={\"cacheDirectory\":\"/tmp/cquery\",\"highlight\":{\"enabled\":true}}"]
+# args = ["--init={\"cacheDirectory\":\"/tmp/ccls\",\"highlight\":{\"enabled\":true}}"]
+args = ["--init={\"cache.directory\":\"/tmp/ccls\",\"highlight\":{\"enabled\":true}}"]
 
 [language.haskell]
 filetypes = ["haskell"]

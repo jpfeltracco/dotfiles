@@ -4,20 +4,21 @@
 
 # Plug variables
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
-plug "jpfeltracco/fzf.kak"
 plug "ul/kak-lsp" do %{
     cargo build --release --locked
-    cargo install --force
+    cargo install --force --path .
 }
 plug "occivink/kakoune-gdb"
+plug "eraserhd/kak-ansi"
 
 # enable kak-lsp
-lsp-enable
+hook global WinSetOption filetype=(c|cpp) %{
+        lsp-enable-window
+}
 
 #############################################################################
 ## Functions
 #############################################################################
-
 evaluate-commands %sh{
     case $(uname) in
         Linux) copy="xclip -i -selection clipboard"; paste="xclip -o -selection clipboard" ;;
@@ -29,8 +30,6 @@ evaluate-commands %sh{
     printf "map global user -docstring 'yank to clipboard' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 clipboard}<ret>'\n" "$copy"
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
 }
-
-set-option global termcmd "kitty @ new-window --no-response "
 
 # GDB Mode
 declare-user-mode gdb
@@ -45,63 +44,59 @@ map global gdb p ': gdb-print ' -docstring 'Print'
 map global gdb b ': gdb-toggle-breakpoint<ret>' -docstring 'Toggle breakpoint'
 map global gdb a ': gdb-toggle-autojump<ret>' -docstring 'Print'
 
+alias global terminal x11-terminal
+alias global focus x11-focus
+alias global repl x11-repl
+alias global send-text x11-send-text
+
+
 # User mode
 declare-user-mode win
 
 map global user w ':enter-user-mode<space>win<ret>'
 
-map global win w ': terminal kak -c %val{session}<ret>' -docstring 'Open a new window'
-map global win t ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
-map global win g ': terminal shell-run source git-root-go<ret>' -docstring 'New terminal in git root'
-map global win b ': terminal shell-run source git-root-go-build<ret>' -docstring 'New terminal in git root build dir'
-# map global win t ': terminal %val{client_env_SHELL} -c "cd %sh{echo $(dirname $kak_buffile)} ; %val{client_env_SHELL}"<ret>' -docstring 'Run terminal in current buffer directory'
+map global win w ': x11-terminal kak -c %val{session}<ret>' -docstring 'Open a new window'
+map global win t ': x11-terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
+map global win g ': x11-terminal shell-run source git-root-go<ret>' -docstring 'New terminal in git root'
+map global win b ': x11-terminal shell-run source git-root-go-build<ret>' -docstring 'New terminal in git root build dir'
 
-# User mode for searching file contents
-declare-user-mode ag
+define-command file-search %{ nop %sh{ {
+    mkfifo /tmp/fff_fifo
+    ag -l -f --one-device --silent . > /tmp/fff_fifo &
+    fff
+    file_open=$(cat /tmp/fff_result.out)
+    echo "eval -client '$kak_client' 'e ${file_open}'" |
+        kak -p ${kak_session}
+} > /dev/null 2>&1 < /dev/null & }}
 
-# Ag with basically no restrictions
-define-command -hidden fzf-ag %{ evaluate-commands %sh{
-    cmd="ag --nobreak --noheading ."
-    additional_flags="--delimiter=:  --nth=3.. | cut -d ':' -f1,2 | tr ':' ' '"
-    printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
-}}
-map global ag -docstring "ag files" 'a' '<esc>: fzf-ag<ret>'
+define-command ag-search %{ nop %sh{ {
+    mkfifo /tmp/fff_fifo
+    ag --nobreak --noheading . > /tmp/fff_fifo &
+    fff '--delimiter=: --nth=3..'
+    file_open=$(cat /tmp/fff_result.out | cut -d ':' -f1,2 | tr ':' ' ')
+    echo "eval -client '$kak_client' 'e ${file_open}'" |
+        kak -p ${kak_session}
+} > /dev/null 2>&1 < /dev/null & }}
 
-# Ag only on non-submodules (useful in repos with submodule dependencies)
-define-command -hidden fzf-ag-nosub %{ evaluate-commands %sh{
-    cmd="ag-nosub --nobreak --noheading ."
-    additional_flags="--delimiter=:  --nth=3.. | cut -d ':' -f1,2 | tr ':' ' '"
-    printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
-}}
-map global ag -docstring "ag files" 's' '<esc>: fzf-ag-nosub<ret>'
+# Only for debugging purposes
+define-command sleep %{ nop %sh{ {
+    sleep 10
+    echo "eval -client '$kak_client' 'echo sleep ended'" |
+        kak -p ${kak_session}
+} > /dev/null 2>&1 < /dev/null & }}
 
-# Git grep files
-define-command -hidden fzf-gitgrep %{ evaluate-commands %sh{
-    cmd="git grep -n ."
-    additional_flags="--delimiter=:  --nth=3.. | cut -d ':' -f1,2 | tr ':' ' '"
-    printf "%s\n" "fzf %{edit} %{$cmd} %{-m --expect ctrl-w $additional_flags}"
-}}
-map global ag -docstring "git-grep files" 'g' '<esc>: fzf-gitgrep<ret>'
-
-set-option global fzf_preview false
-set-option global fzf_file_command 'ag -l -f --one-device --silent .'
-
-hook global BufCreate .*\.launch %{
-    set-option buffer filetype xml
-}
 
 #############################################################################
 ## USER MODE BINDINGS
 #############################################################################
-
 colorscheme gruvbox
 
 # File bindings
 map global user 0 ': e ~/notes/notes.md<ret>' -docstring 'Open notes'
 map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
 # Command bindings
-map global user f ': fzf-mode<ret>' -docstring 'Search files'
-# map global user a ': grep ' -docstring 'Grep for file contents'
+map global user f ': file-search<ret>' -docstring 'Search files'
+map global user a ': ag-search<ret>' -docstring 'Grep for file contents'
 map global user c ': comment-line<ret>' -docstring 'Comment line'
 map global user l ': enter-user-mode lsp<ret>' -docstring 'Enter LSP user mode'
 
@@ -115,17 +110,15 @@ map -docstring 'case insensitive backward search' global user '<a-/>' <a-/>(?i)
 map -docstring 'case insensitive extend search' global user '?' ?(?i)
 map -docstring 'case insensitive backward extend-search' global user '<a-?>' <a-?>(?i)
 
-map global user a ':enter-user-mode<space>ag<ret>'
-
 # Use ag for grepping
 set global grepcmd 'ag'
 
 # line numbers
 add-highlighter global/ number-lines
 
-# tab stop
-# hook global InsertChar \t %{ exec -draft -itersel h@ }
-
+hook global BufCreate .*\.launch %{
+    set-option buffer filetype xml
+}
 hook global InsertChar \t %{ try %{
   execute-keys -draft "h<a-h><a-k>\A\h+\z<ret><a-;>;%opt{indentwidth}@"
 }}
