@@ -60,10 +60,12 @@ map global win t ': x11-terminal %sh{echo $SHELL}<ret>' -docstring 'Run new term
 map global win g ': x11-terminal shell-run source git-root-go<ret>' -docstring 'New terminal in git root'
 map global win b ': x11-terminal shell-run source git-root-go-build<ret>' -docstring 'New terminal in git root build dir'
 
+declare-option -hidden str termcmd_pop "kitty --class drop_kitty_terminal --single-instance --wait-for-single-instance-window-close sh -c"
+
 define-command file-search %{ nop %sh{ {
     mkfifo /tmp/fff_fifo
     ag -l -f --one-device --silent . > /tmp/fff_fifo &
-    fff
+    $kak_opt_termcmd_pop "fzf < /tmp/fff_fifo > /tmp/fff_result.out"
     file_open=$(cat /tmp/fff_result.out)
     echo "eval -client '$kak_client' 'e ${file_open}'" |
         kak -p ${kak_session}
@@ -72,8 +74,31 @@ define-command file-search %{ nop %sh{ {
 define-command ag-search %{ nop %sh{ {
     mkfifo /tmp/fff_fifo
     ag --nobreak --noheading . > /tmp/fff_fifo &
-    fff '--delimiter=: --nth=3..'
+    $kak_opt_termcmd_pop "fzf --delimiter=: --nth=3.. < /tmp/fff_fifo > /tmp/fff_result.out"
     file_open=$(cat /tmp/fff_result.out | cut -d ':' -f1,2 | tr ':' ' ')
+    echo "eval -client '$kak_client' 'e ${file_open}'" |
+        kak -p ${kak_session}
+} > /dev/null 2>&1 < /dev/null & }}
+
+define-command selection-search %{ nop %sh{ {
+    mkfifo /tmp/fff_fifo
+    ag --nobreak --noheading . > /tmp/fff_fifo &
+    $kak_opt_termcmd_pop "fzf --query=$kak_selections --delimiter=: --nth=3.. < /tmp/fff_fifo > /tmp/fff_result.out"
+    file_open=$(cat /tmp/fff_result.out | cut -d ':' -f1,2 | tr ':' ' ')
+    echo "eval -client '$kak_client' 'e ${file_open}'" |
+        kak -p ${kak_session}
+} > /dev/null 2>&1 < /dev/null & }}
+
+define-command buf-search %{ nop %sh{ {
+    $kak_opt_termcmd_pop "echo $kak_buflist | tr ' ' '\n' | fzf --delimiter=' ' > /tmp/fff_result.out"
+    file_open=$(cat /tmp/fff_result.out)
+    echo "eval -client '$kak_client' 'b ${file_open}'" |
+        kak -p ${kak_session}
+} > /dev/null 2>&1 < /dev/null & }}
+
+define-command ranger-search %{ nop %sh{ {
+    $kak_opt_termcmd_pop "ranger --choosefile=/tmp/rng_choice"
+    file_open=$(cat /tmp/rng_choice)
     echo "eval -client '$kak_client' 'e ${file_open}'" |
         kak -p ${kak_session}
 } > /dev/null 2>&1 < /dev/null & }}
@@ -97,6 +122,8 @@ map global user 1 ': e ~/.config/kak/kakrc<ret>' -docstring 'Open kakrc'
 # Command bindings
 map global user f ': file-search<ret>' -docstring 'Search files'
 map global user a ': ag-search<ret>' -docstring 'Grep for file contents'
+map global user s ': selection-search<ret>' -docstring 'Grep for selection'
+map global user r ': ranger-search<ret>' -docstring 'Find file using ranger'
 map global user c ': comment-line<ret>' -docstring 'Comment line'
 map global user l ': enter-user-mode lsp<ret>' -docstring 'Enter LSP user mode'
 
