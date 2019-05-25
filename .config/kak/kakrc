@@ -44,12 +44,6 @@ map global gdb p ': gdb-print ' -docstring 'Print'
 map global gdb b ': gdb-toggle-breakpoint<ret>' -docstring 'Toggle breakpoint'
 map global gdb a ': gdb-toggle-autojump<ret>' -docstring 'Print'
 
-alias global terminal x11-terminal
-alias global focus x11-focus
-alias global repl x11-repl
-alias global send-text x11-send-text
-
-
 # User mode
 declare-user-mode win
 
