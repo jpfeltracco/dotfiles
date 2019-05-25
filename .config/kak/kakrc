@@ -49,10 +49,10 @@ declare-user-mode win
 
 map global user w ':enter-user-mode<space>win<ret>'
 
-map global win w ': x11-terminal kak -c %val{session}<ret>' -docstring 'Open a new window'
-map global win t ': x11-terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
-map global win g ': x11-terminal shell-run source git-root-go<ret>' -docstring 'New terminal in git root'
-map global win b ': x11-terminal shell-run source git-root-go-build<ret>' -docstring 'New terminal in git root build dir'
+map global win w ': terminal kak -c %val{session}<ret>' -docstring 'Open a new window'
+map global win t ': terminal %sh{echo $SHELL}<ret>' -docstring 'Run new terminal'
+map global win g ': terminal shell-run source git-root-go<ret>' -docstring 'New terminal in git root'
+map global win b ': terminal shell-run source git-root-go-build<ret>' -docstring 'New terminal in git root build dir'
 
 declare-option -hidden str termcmd_pop "kitty --class drop_kitty_terminal --single-instance --wait-for-single-instance-window-close sh -c"
 
