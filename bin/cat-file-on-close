@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Full path to file is passed in through $1
+
+dir=$(dirname $1) # directory name
+fn=$(basename $1) # file name
+
+while read i; do if [ "$i" = "$fn" ]; then break; fi; done \
+   < <(inotifywait  -e close --format '%f' --quiet $dir --monitor)
+
+cat $1
