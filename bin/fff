@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# $1 : flags for fzf?
-
-kitty --class drop_kitty_terminal --single-instance --wait-for-single-instance-window-close \
-    sh -c "fzf $1  < /tmp/fff_fifo > /tmp/fff_result.out"
