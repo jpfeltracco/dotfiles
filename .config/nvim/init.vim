@@ -1,5 +1,6 @@
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'junegunn/fzf.vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'leafgarland/typescript-vim'
 Plug 'rafi/awesome-vim-colorschemes'
@@ -8,9 +9,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'prettier/vim-prettier'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-commentary'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'vimwiki/vimwiki'
 Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-surround'
 call plug#end()
 
 "===========================================
@@ -33,8 +34,12 @@ set splitright
 set shiftwidth=4
 set expandtab
 
-" See my cursor better!
-set cursorline
+" See my cursor better, and only show in active window
+augroup Highlight
+  autocmd!
+  autocmd WinEnter * set cul
+  autocmd WinLeave * set nocul
+augroup END
 
 " Doom Emacs inspired
 let mapleader = "\<Space>"
@@ -66,14 +71,14 @@ set ignorecase
 set smartcase
 
 " Rg only file contents, not file names
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+" command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
 " When go to definition fails, just space rg!
 nnoremap <silent> <Leader>rg :Rg <C-R><C-W><CR>
 
 " Don't let vim-go handle go-to definition, leave this to coc.nvim, I found it
 " to be faster and just nicer
-let g:go_def_mapping_enabled = 0
+" let g:go_def_mapping_enabled = 0
 
 " set filetypes to get read using typescript-vim
 autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescript.tsx
@@ -84,7 +89,14 @@ autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.graphql,*.
 
 " disable vim-go
 " let g:go_metalinter_enabled = []
+" autocmd FileType go nmap <silent> gd : GoDef<CR>
 
+" Use gopls? This is still really buggy
+let g:go_def_mode = 'godef'
+
+" Save folds on write
+autocmd BufWrite * mkview
+autocmd BufRead * silent! loadview
 
 "===========================================
 " vimwiki
@@ -165,7 +177,7 @@ nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
+autocmd FileType typescript nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
