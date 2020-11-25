@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -e
-
-flags=$(git-submodule-paths | sed 's/^/--ignore-dir /' | paste -sd " " -)
-
-ag $flags "$@"
